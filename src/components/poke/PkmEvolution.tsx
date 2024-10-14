@@ -72,7 +72,7 @@ const PkmEvolution = ({ pokemonSpec }: { pokemonSpec: number }) => {
       <div className=" rounded-t-sm mt-5 pt-3 pl-2 bg-red-400 text-white text-2xl sm:w-9/12 md:w-11/12 sm:flex  sm:pl-4 sm:items-center">
         <p>Evolutions</p>
       </div>
-      <div className="flex justify-center items-center lg:justify-center w-80 mb-5 rounded-br-sm rounded-bl-3xl bg-red-400  gap-3 text-white sm:ml sm:w-9/12 md:w-11/12 lg:   lg:basis-1/2">
+      <div className="flex justify-center items-center lg:justify-center  mb-5 rounded-br-sm rounded-bl-3xl bg-red-400  gap-3 text-white sm:ml sm:w-9/12 md:w-11/12 lg:   lg:basis-1/2">
         {renderEvolutionChain(evolutionData!.chain)}
       </div>
     </div>

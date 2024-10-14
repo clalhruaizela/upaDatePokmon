@@ -200,13 +200,9 @@ const PokemonPageID = () => {
               </div>
             </div>
           </div>
-          <div>
-            {abilities && abilities.length > 0 && (
-              <PokemonAbilityDetail abilities={abilities[0]} />
-            )}
-          </div>
+
           <div className="mt-20 sm:bg-[url('../src/assets/abstract-pattern.avif')] xl:w-7/12 xl:flex xl:justify-center xl:pb-8 xl:items-center">
-            <div className="flex justify-center  bg-white flex-col items-center mx-11 w-9/12 sm:w-10/12 sm:mx-14 md:w-9/12 md:mx-28 lg:mx-12 lg:w-11/12 xl:w-10/12  xl:">
+            <div className="flex justify-center  bg-white flex-col items-center mx-11  sm:w-10/12 sm:mx-14 md:w-9/12 md:mx-28 lg:mx-12 lg:w-11/12 xl:w-10/12  xl:">
               <div className="lg:grid lg:grid-cols-12">
                 <div className="lg:col-span-6">
                   <div className="sm:w-full sm:flex sm:flex-col sm:items-center lg: ">
@@ -215,15 +211,15 @@ const PokemonPageID = () => {
                         data!.sprites.other?.["official-artwork"].front_default
                       }
                       alt={data!.name}
-                      className="bg-gray-200 h-80 w-80 mt-4 sm:w-9/12 md:w-11/12 lg: md:aspect-square sm:h-full rounded-sm"
+                      className="bg-gray-200 h-80 w-full mt-4 sm:w-9/12 md:w-7/12 lg: md:aspect-square sm:h-full rounded-sm"
                     />
                   </div>
-                  <div className="w-80 sm:w-9/12 sm:text md:basis-1/3 md:ml-6  lg:w-40  lg:ml-6 lg:col-span-6 xl:">
+                  <div className="w-full sm:w-9/12 sm:text md:basis-1/3 md:ml-6  lg:w-40  lg:ml-6 lg:col-span-6 xl:">
                     <PokemonChartDT />
                   </div>
                 </div>
                 <div className="lg:col-span-6 ">
-                  <div className=" bg-blue-400 my-4 w-80 py-4 gap-6 2xl:gap-2 sm:ml-16 sm:w-9/12 md:w-11/12 md:ml-6 xl:ml-0 lg:w-11/12 lg:py-8 sm:py-4 sm:rounded-md rounded-sm grid grid-cols-6 lg:mt-4 ">
+                  <div className=" bg-blue-400 my-4 w- py-4 gap-6 2xl:gap-2 sm:ml-16 sm:w-9/12 md:w-11/12 md:ml-6 xl:ml-0 lg:w-11/12 lg:py-8 sm:py-4 sm:rounded-md rounded-sm grid grid-cols-6 lg:mt-4 ">
                     <div className="text-black  col-span-6 lg:col-span-3 2xl:ml-20">
                       <div className="flex flex-col justify-center items-center">
                         <div className=" sm:py-1 text-white text-lg">

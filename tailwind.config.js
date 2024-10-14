@@ -3,6 +3,10 @@ export default {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    screens: {
+      xs: "414px",
+      iphone12Pro: "390px",
+    },
     extend: {
       borderRadius: {
         lg: "var(--radius)",

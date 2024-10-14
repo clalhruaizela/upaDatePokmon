@@ -57,18 +57,19 @@ export interface Species {
 
 export interface Ability {
   ability: AbilityDetails[];
-  flavor_text_entries: EffectEntries[];
+  effect_entries: EffectEntries[];
   is_hidden: boolean;
   slot: number;
   id: number;
-}
-interface AbilityDetails {
-  name: string; // Name of the ability
-  url: string; // URL to the ability details
+  name: string;
 }
 interface EffectEntries {
   effect: string;
   language: { name: string; url: string };
+}
+interface AbilityDetails {
+  name: string; // Name of the ability
+  url: string; // URL to the ability details
 }
 
 export interface Cries {
