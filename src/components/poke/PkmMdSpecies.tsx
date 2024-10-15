@@ -6,11 +6,24 @@ const PkmMdSpecies = ({ speciesDetails }: { speciesDetails: string }) => {
     queryKey: ["species", speciesDetails],
     queryFn: async () => fetchPokemonSpecies(speciesDetails),
   });
-  if (isLoading) return "Loading species...";
   if (isError) {
     console.error("Error fetching species data:", error);
-    return "Error loading species.";
+    return (
+      <div>
+        <div className="font-medium text-lg">Habitat</div>
+        <div className="border w-36 px-4 py-1 rounded-sm flex justify-center ">
+          <div>unknown </div>
+        </div>
+        <div className="pt-4">
+          <div className="font-medium text-lg">Generation</div>
+          <div className="border w-36 px-4 py-1 rounded-sm flex justify-center ">
+            unknown
+          </div>
+        </div>
+      </div>
+    );
   }
+  if (isLoading) return "Loading species...";
   return (
     <div className=" h-full w-full  ">
       <div className="flex flex-col ">

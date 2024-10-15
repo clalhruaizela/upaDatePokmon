@@ -32,7 +32,7 @@ const PokemonChartDT = () => {
   const pokemon = location.state?.pokemon;
 
   if (!pokemon) {
-    return <div>No data</div>;
+    return <div></div>;
   }
   const chartData = pokemon.stats.map((stat: PokemonStatSlot) => ({
     statName: capitalize(stat.stat.name),

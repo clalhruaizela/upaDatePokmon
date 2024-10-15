@@ -13,7 +13,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <>
           <Routes>
-            <Route path="/" element={<PokedexHome />} />
+            <Route path="/pokemon" element={<PokedexHome />} />
             <Route path="/pokemon/:id" element={<PokemonPageID />} />
           </Routes>
         </>

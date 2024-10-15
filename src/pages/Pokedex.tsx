@@ -228,7 +228,7 @@ const PokedexHome = () => {
                   ))
               )}
             </div>
-            <div className="flex w-full  md:w-9/12 2xl:w-8/12 bg-white  md:pb-4">
+            <div className="flex w-full  md:w-9/12 xxl:w-8/12 bg-white  md:pb-4">
               {!submit && (
                 <Pagination className="py-5 w-24 border-t-2 md:py-10 ">
                   <PaginationContent>

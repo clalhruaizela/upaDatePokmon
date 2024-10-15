@@ -19,6 +19,7 @@ import PokemonVariety from "../subComp/pokemonVariety";
 import { useEffect, useState } from "react";
 import PokemonShape from "../subComp/PokemonShape";
 import PokemonAbilityDetail from "../PokemonAbilityEntry";
+import PokemonGender from "../PokemonGender";
 
 const fetchPokemonDetails = async (id: number) => {
   const url = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -144,28 +145,28 @@ const PokemonPageID = () => {
         </div>
         ): data?(  */}
         <div className=" xl:flex xl:flex-col xl:justify-center xl:items-center xl:bg-[url('../src/assets/black-angled-paper-slits-design-free-vector.jpg')]">
-          <div className="sm:bg-white   h-32 w-full xl:flex xl:justify-center xl:flex-col xl:items-center xl:w-7/12 xl:pb-20 xl:pt-6 ">
+          <div className="sm:bg-white   h-32 w-full  xl:flex xl:justify-center xl:flex-col xl:items-center xl:w-7/12 xl: xl:pt-6 ">
             <div className="grid grid-cols-6 w-full mb-2 gap-1 mt-6  xl:mt-20  ">
               <div className="col-span-3 bg-gray-400 py-4 flex  items-center lg:text-2xl ">
                 <Button onClick={handlePrev} variant={"ghost"}>
                   <IoIosArrowDropleftCircle className="w-8 h-10 " />
                 </Button>
-                <span className="ml-10 text-white sm:ml-64 sm:font-bold sm:text-base lg:ml-0 lg:text-2xl">
+                <span className="ml-10 text-white sm:ml-64 sm:font-bold sm:text-base lg:ml-0 lg:text-2xl xl:text-sm">
                   #{String(prevId).padStart(4, "0")}
                 </span>
                 {prevPokemon && (
-                  <span className="hidden lg:flex lg:pl-2 lg:text-3xl">
+                  <span className="hidden lg:flex lg:pl-2 lg:text-2xl">
                     {capitalize(prevPokemon.name)}
                   </span>
                 )}
               </div>
               <div className="col-span-3 flex justify-end items-center bg-gray-400 py-4 ">
                 {nextPokemon && (
-                  <span className="hidden lg:flex  lg:pr-3 lg:text-3xl">
+                  <span className="hidden lg:flex  lg:pr-3 lg:text-2xl">
                     {capitalize(nextPokemon.name)}
                   </span>
                 )}
-                <span className="mr-10 sm:mr-64 sm:text-base sm:font-bold text-white lg:text-2xl lg:mr-0">
+                <span className="mr-10 sm:mr-64 sm:text-base sm:font-bold text-white lg:text-2xl lg:mr-0 xl:text-sm">
                   #{String(nextId).padStart(4, "0")}
                 </span>
 
@@ -175,7 +176,7 @@ const PokemonPageID = () => {
               </div>
             </div>
 
-            <div className="flex justify-center flex-col items-center">
+            <div className="flex justify-center xl:bg-white xl:w-full flex-col items-center">
               {/* {capitalize(data!.name)} */}
               <div className=" flex flex-col items-center text-2xl pb-4 xl:text-3xl justify-center sm:flex-row sm:gap-2 sm:font-semibold xl:w- xl">
                 <p className="xl:text-4xl   ">{capitalize(data!.name)}</p>{" "}
@@ -184,19 +185,21 @@ const PokemonPageID = () => {
                   #{String(currentId).padStart(4, "0")}
                 </p>
               </div>
-              <div className=" mb-10 w-52">
-                {pokemonVarient?.varieties &&
-                  pokemonVarient.varieties.length > 2 && (
-                    <PokemonVariety
-                      varieties={pokemonVarient.varieties}
-                      onChange={handleVarietyChange}
-                      selectedPokemonName={data!.name}
-                    />
+              <div className="">
+                <div className=" mb-14 w-52 ">
+                  {pokemonVarient?.varieties &&
+                    pokemonVarient.varieties.length > 2 && (
+                      <PokemonVariety
+                        varieties={pokemonVarient.varieties}
+                        onChange={handleVarietyChange}
+                        selectedPokemonName={data!.name}
+                      />
+                    )}
+                  {(!pokemonVarient?.varieties ||
+                    pokemonVarient.varieties.length === 0) && (
+                    <p>No varieties available</p>
                   )}
-                {(!pokemonVarient?.varieties ||
-                  pokemonVarient.varieties.length === 0) && (
-                  <p>No varieties available</p>
-                )}
+                </div>
               </div>
             </div>
           </div>
@@ -205,8 +208,9 @@ const PokemonPageID = () => {
               <PokemonAbilityDetail abilities={abilities[0]} />
             )}
           </div> */}
+
           <div className="mt-20 sm:bg-[url('../src/assets/abstract-pattern.avif')] xl:w-7/12 xl:flex xl:justify-center xl:pb-8 xl:items-center">
-            <div className="flex justify-center  bg-white flex-col items-center mx-11 w-9/12 sm:w-10/12 sm:mx-14 md:w-9/12 md:mx-28 lg:mx-12 lg:w-11/12 xl:w-10/12  xl:">
+            <div className="flex justify-center  bg-white flex-col items-center mx-11  sm:w-10/12 sm:mx-14 md:w-9/12 md:mx-28 lg:mx-12 lg:w-11/12 xl:w-10/12  xl:">
               <div className="lg:grid lg:grid-cols-12">
                 <div className="lg:col-span-6">
                   <div className="sm:w-full sm:flex sm:flex-col sm:items-center lg: ">
@@ -215,16 +219,16 @@ const PokemonPageID = () => {
                         data!.sprites.other?.["official-artwork"].front_default
                       }
                       alt={data!.name}
-                      className="bg-gray-200 h-80 w-80 mt-4 sm:w-9/12 md:w-11/12 lg: md:aspect-square sm:h-full rounded-sm"
+                      className="bg-gray- h-80 w-full mt-4 sm:w-9/12 md:w-7/12 lg: md:aspect-square sm:h-full rounded-sm"
                     />
                   </div>
-                  <div className="w-80 sm:w-9/12 sm:text md:basis-1/3 md:ml-6  lg:w-40  lg:ml-6 lg:col-span-6 xl:">
+                  <div className="w-full sm:w-9/12 sm:text md:basis-1/3 md:ml-6    lg:ml-6 lg:col-span-6 xl:">
                     <PokemonChartDT />
                   </div>
                 </div>
                 <div className="lg:col-span-6 ">
-                  <div className=" bg-blue-400 my-4 w-80 py-4 gap-6 2xl:gap-2 sm:ml-16 sm:w-9/12 md:w-11/12 md:ml-6 xl:ml-0 lg:w-11/12 lg:py-8 sm:py-4 sm:rounded-md rounded-sm grid grid-cols-6 lg:mt-4 ">
-                    <div className="text-black  col-span-6 lg:col-span-3 2xl:ml-20">
+                  <div className=" bg-blue-400 my-4 w- py-4 gap-6 xxl:gap-2 sm:ml-16 sm:w-9/12 md:w-11/12 md:ml-6 xl:ml-0 lg:w-11/12 lg:py-8 sm:py-4 sm:rounded-md rounded-sm grid grid-cols-6 lg:mt-4 ">
+                    <div className="text-black  col-span-6 lg:col-span-3 xxl:ml-20">
                       <div className="flex flex-col justify-center items-center">
                         <div className=" sm:py-1 text-white text-lg">
                           Ability
@@ -238,7 +242,7 @@ const PokemonPageID = () => {
                         </div>
                       </div>
                     </div>
-                    <div className=" col-span-6 lg:col-span-3 2xl:mr-36">
+                    <div className=" col-span-6 lg:col-span-3 xxl:mr-36">
                       {id && (
                         <PkmMdHeight pokeUrl={id}>
                           {(data) => (
@@ -252,7 +256,7 @@ const PokemonPageID = () => {
                         </PkmMdHeight>
                       )}
                     </div>
-                    <div className="col-span-6 lg:col-span-3 2xl:ml-20">
+                    <div className="col-span-6 lg:col-span-3 xxl:ml-20">
                       <div className="flex flex-col justify-center items-center">
                         <div className="sm:py-1 text-lg text-white">Weight</div>
                         <div className=" text-xl sm:">
@@ -260,17 +264,24 @@ const PokemonPageID = () => {
                         </div>
                       </div>
                     </div>
-                    <div className=" col-span-6 lg:col-span-3 2xl:mr-36">
+                    <div className=" col-span-6 lg:col-span-3 xxl:mr-36">
                       <div className="flex flex-col justify-center items-center">
                         <div className="sm:py-1 text-lg   text-white ">
                           Gender
                         </div>
-                        <div className="text-xl sm:text-2xl">♂︎{""}♀ </div>
+                        {/* <div className="text-xl sm:text-2xl">♂︎{""}♀ </div> */}
+                        <div>
+                          {data?.gender && (
+                            <PokemonGender
+                              genderRateId={genderRateId.toString()}
+                            />
+                          )}
+                        </div>
                       </div>
                     </div>
-                    <div>
+                    {/* <div>
                       <PokemonShape shapeId="" />
-                    </div>
+                    </div> */}
                   </div>
 
                   <div className="w-full grid grid-cols-6 px- sm:px-20 md:px-1 md:basis-1/3 md:ml-6 xl:ml-0 lg:mt-10 ">
@@ -315,7 +326,7 @@ const PokemonPageID = () => {
                       </div>
                     </div>
                   </div>
-                  <div className=" mt-3   ">
+                  <div className=" mt-3  md:ml-6  xl:ml-0 ">
                     {data?.name ? (
                       <div className=" ">
                         <PkmMdSpecies speciesDetails={data.name} />
