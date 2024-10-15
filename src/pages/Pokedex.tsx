@@ -196,9 +196,7 @@ const PokedexHome = () => {
                 </div>
               </div>
             </div>
-            <div>
-              <SortPokemon pokemonData={pokemonData} />
-            </div>
+            <div>{/* <SortPokemon pokemonData={pokemonData} /> */}</div>
             <div
               className="flex flex-col md:grid md:grid-cols-3  min-h-screen md:gap-4  md:w-9/12  xl:w-8/12   bg-white md:py-6 "
               start={startIndex + 1}

@@ -132,9 +132,9 @@ const PokemonPageID = () => {
   if (isError)
     return <div>Error fetching Pokémon details: Pokkemon not found</div>;
 
-  const abilities = data?.abilities.map(
-    (ability: { ability: { name: string } }) => ability.ability.name
-  );
+  // const abilities = data?.abilities.map(
+  //   (ability: { ability: { name: string } }) => ability.ability.name
+  // );
   return (
     <Layout>
       <div className="h-full w-screen lg:mb-28 xl:mb-0">
@@ -200,11 +200,11 @@ const PokemonPageID = () => {
               </div>
             </div>
           </div>
-          <div>
+          {/* <div>
             {abilities && abilities.length > 0 && (
               <PokemonAbilityDetail abilities={abilities[0]} />
             )}
-          </div>
+          </div> */}
           <div className="mt-20 sm:bg-[url('../src/assets/abstract-pattern.avif')] xl:w-7/12 xl:flex xl:justify-center xl:pb-8 xl:items-center">
             <div className="flex justify-center  bg-white flex-col items-center mx-11 w-9/12 sm:w-10/12 sm:mx-14 md:w-9/12 md:mx-28 lg:mx-12 lg:w-11/12 xl:w-10/12  xl:">
               <div className="lg:grid lg:grid-cols-12">
