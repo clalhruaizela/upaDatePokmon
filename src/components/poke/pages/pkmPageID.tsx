@@ -17,9 +17,8 @@ import { IoIosArrowDroprightCircle } from "react-icons/io";
 import PkmMdSpecies from "../PkmMdSpecies";
 import PokemonVariety from "../subComp/pokemonVariety";
 import { useEffect, useState } from "react";
-import PokemonShape from "../subComp/PokemonShape";
-import PokemonAbilityDetail from "../PokemonAbilityEntry";
 import PokemonGender from "../PokemonGender";
+import { Generation, PokemonTypesData, Weakness } from "../pokeType";
 
 const fetchPokemonDetails = async (id: number) => {
   const url = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -29,7 +28,16 @@ const fetchPokemonDetails = async (id: number) => {
   }
   return (await url.json()) as PokemonData;
 };
+const fetchPokemonType = async (pokemontype: string) => {
+  const response = await fetch(
+    ` https://pokeapi.co/api/v2/type/${pokemontype} `
+  );
+  if (!response.ok) {
+    throw new Error(`An error occurred:${response.statusText}`);
+  }
 
+  return (await response.json()) as PokemonTypesData;
+};
 const capitalize = (str: string): string => {
   const updatedstr = str.replace(/-/g, " ");
   return updatedstr
@@ -45,6 +53,7 @@ const PokemonPageID = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const currentId = parseInt(id!);
+  const [weakness, setWeakness] = useState<Weakness[]>([]);
   const { isLoading, isError, data } = useQuery({
     queryKey: [id],
     queryFn: async () => {
@@ -84,10 +93,10 @@ const PokemonPageID = () => {
   };
 
   const handleVarietyChange = async (selectedVariety: string) => {
-    console.log("handleVarietyChange called with", selectedVariety);
+    // console.log("handleVarietyChange called with", selectedVariety);
 
     if (pokemonVarient) {
-      console.log("pokemonVarient is defined", pokemonVarient);
+      // console.log("pokemonVarient is defined", pokemonVarient);
 
       const selectedVarietyData = pokemonVarient?.varieties?.find(
         (pokemon) => pokemon.pokemon.name === selectedVariety
@@ -111,15 +120,15 @@ const PokemonPageID = () => {
     }
   };
   // console.log("pokemonVarient", pokemonVarient);
-  console.log(data);
+  // console.log(data);
   useEffect(() => {
     const fetchData = async () => {
       if (data) {
-        console.log("Data available:", data);
+        // console.log("Data available:", data);
         const response = await fetch(data.species.url);
-        console.log("Fetching species data from:", data.species.url);
+        // console.log("Fetching species data from:", data.species.url);
         const speciesData: PokemonData = await response.json();
-        console.log("Species data fetched:", speciesData);
+        // console.log("Species data fetched:", speciesData);
         setPokemonVarient(speciesData);
       } else {
         console.log("No data available");
@@ -128,7 +137,23 @@ const PokemonPageID = () => {
     fetchData();
   }, [data]);
 
-  console.log("pokemon", data);
+  useEffect(() => {
+    if (data) {
+      data.types.map(async (type) => {
+        const pokemonTypes = await fetchPokemonType(type.type.name);
+        const doubleDamageTypes =
+          pokemonTypes.damage_relations.double_damage_from || [];
+
+        setWeakness((prev) => [...prev, ...doubleDamageTypes]);
+      });
+    }
+
+    // const fetchPokemonTypes = async (type: string) => {
+    //   const response = await fetchPokemonType(type);
+    //   return response;
+    // };
+  }, [data]);
+
   if (isLoading) return "Loading";
   if (isError)
     return <div>Error fetching Pokémon details: Pokkemon not found</div>;
@@ -315,14 +340,28 @@ const PokemonPageID = () => {
                         Weaknesses
                       </div>
                       <div className="text-xs sm:text-sm   flex flex-col  pt-1  w-full md:w-11/12   sm:py-1 ">
-                        {/* <div className="row-span-2"> */}
-                        {data?.types.map((t, index) => (
+                        <div className="row-span-2">
+                          {/* {data && data?.length > 0 && (
+
+                              {data?.map((type, index) => (
+                                <PokemonTypesWeakness
+                                  key={index}
+                                  pokemonType={type.name}
+                                />
+                              ))}
+
+                          )} */}
+                          {/* <div className="row-span-2"> */}
+                          {/* {data?.types.map((t, index) => ( */}
                           <PokemonTypesWeakness
-                            key={index}
-                            pokemonType={t.type.name}
+                            // key={index}
+                            // pokemonType={t.type.name}
+                            weakness={weakness}
+                            // setWeakness={setWeakness}
                           />
-                        ))}
-                        {/* </div> */}
+                          {/* ))} */}
+                          {/* </div> */}
+                        </div>
                       </div>
                     </div>
                   </div>

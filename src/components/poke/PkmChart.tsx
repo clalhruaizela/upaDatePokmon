@@ -38,7 +38,7 @@ const PokemonChartDT = () => {
     statName: capitalize(stat.stat.name),
     number: stat.base_stat,
   }));
-  // console.log("chart", pokemon);
+  console.log("chart", pokemon);
   return (
     <div className="w-full flex justify-center items-center">
       <div className="min-w-full h-full flex flex-col justify-center items-center ">

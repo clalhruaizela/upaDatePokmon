@@ -26,6 +26,11 @@ export interface Generation {
   url: string;
 }
 
+export interface Weakness {
+  name: string;
+  url: string;
+}
+
 export interface GameIndex {
   game_index: number;
   generation: Generation;

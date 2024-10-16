@@ -33,7 +33,7 @@ const EvoImageCard: React.FC<PokemonCardProps> = ({
           return;
         }
         const data = await response.json();
-        console.log("Pokemon data fetched:", data); // Log fetched data
+        // console.log("Pokemon data fetched:", data);
         setPokemonType(data);
       } catch (error) {
         console.error("Error fetching Pokémon details:", error);
@@ -46,7 +46,7 @@ const EvoImageCard: React.FC<PokemonCardProps> = ({
   if (!pokemonType) {
     return <p>Loading Pokémon details...</p>;
   }
-  console.log("pokemon type for evolution", pokemonType);
+  // console.log("pokemon type for evolution", pokemonType);
   return (
     <div className="lg:flex lg:justify-center lg:items-center lg:flex-col  lg:basis-1/3 ">
       <div className="flex justify-center items-center flex-col">

@@ -13,7 +13,7 @@ const PokemonGender = ({ genderRateId }: { genderRateId: string }) => {
     queryKey: [genderRateId],
     queryFn: async () => fetchPokemonGender(genderRateId),
   });
-
+  console.log("GenderRATE Id", genderRateId);
   if (isLoading) return "Loading Gender...";
   if (isError) return "Error loading Gender.";
   return (

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { PokemonTypesData } from "./pokeType";
+import { Generation, PokemonTypesData, Weakness } from "./pokeType";
 import { getTypeColors } from "./utilities/typeColor";
+import { useEffect, useRef } from "react";
 
 const fetchPokemonType = async (pokemontype: string) => {
   const response = await fetch(
@@ -12,81 +13,46 @@ const fetchPokemonType = async (pokemontype: string) => {
 
   return (await response.json()) as PokemonTypesData;
 };
-const PokemonTypesWeakness = ({ pokemonType }: { pokemonType: string }) => {
-  const { isLoading, isError, data } = useQuery({
-    queryKey: [pokemonType],
-    queryFn: async () => fetchPokemonType(pokemonType),
-  });
+const PokemonTypesWeakness = ({ weakness }: { weakness: Weakness[] }) => {
+  // const { isLoading, isError, data } = useQuery({
+  //   queryKey: [pokemonType],
+  //   queryFn: async () => fetchPokemonType(pokemonType),
+  // });
 
   const capitalized = (str: string): string => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
-  if (isLoading) return "Loading...";
-  if (isError) return "Error loading ability.";
+  // // const prevData = useRef<Weakness[]>([]);
+  // useEffect(() => {
+  //   if (data) {
+  //     const doubleDamageTypes = data.damage_relations.double_damage_from || [];
 
-  const doubleDamageTypes = data?.damage_relations.double_damage_from || [];
-  const halfDamageTypes = data?.damage_relations.half_damage_from || [];
-  const noDamageTypes = data?.damage_relations.no_damage_from || [];
+  //     setWeakness((prevWeakness: Weakness[]) => [
+  //       ...prevWeakness,
+  //       ...doubleDamageTypes,
+  //     ]);
+  //   }
+  // }, [data, setWeakness]);
+  // console.log("setDaata",data)
+  const reducedTypes = weakness.reduce((acc, type) => {
+    if (!acc.some((t) => t.name === type.name)) {
+      acc.push(type);
+    }
+    return acc;
+  }, [] as typeof weakness);
+  console.log("reduce", weakness);
+  console.log("reduceTYPE1", reducedTypes);
 
-  const filteredWeaknesses = doubleDamageTypes.filter(
-    (type) =>
-      !halfDamageTypes.some((halfType) => halfType.name === type.name) &&
-      !noDamageTypes.some((notype) => notype.name === type.name)
-  );
+  // console.log("data from type", data);
+  // if (isLoading) return "Loading...";
+  // if (isError) return "Error loading ability.";
 
-  //   const calculateWeaknesses = (): string[] => {
-  //     return doubleDamageTypes.map((type) => {
-  //       const typeWeakness = capitalized(type.name);
-  //       console.log("typeWeakness", typeWeakness);
+  // const doubleDamageTypes = data?.damage_relations.double_damage_from || [];
 
-  //       const hasDoubleWeakness = doubleDamageTypes.filter((type) =>
-  //         doubleDamageTypes.some((otherType) => otherType.name === type.name)
-  //       );
-
-  //       if (hasDoubleWeakness.length > 2) {
-  //         return ${typeWeakness} (Deal 4x damage);
-  //       }
-  //       console.log("hasDoubleWeakness", hasDoubleWeakness);
-  //       const isWeakToType = doubleDamageTypes.some(
-  //         (type) =>
-  //           !noDamageTo.some((noTypeDamage) => noTypeDamage.name === type.name)
-  //       );
-
-  //       if (isWeakToType) {
-  //         return ${typeWeakness}(Deal 2x damage);
-  //       }
-  //       const isDoubleFromAndHalfDamageTo = doubleDamageTypes.some((type) =>
-  //         halfDamageTo.some((halfDm) => halfDm.name === type.name)
-  //       );
-  // if (isDoubleFromAndHalfDamageTo) {
-  //         return ${typeWeakness};
-  //       }
-  //       const isHalfDamageFromAndhalfDamageTo = halfDamageTypes.some((type) =>
-  //         halfDamageTo.some((half) => half.name === type.name)
-  //       );
-  //       if (isHalfDamageFromAndhalfDamageTo) {
-  //         return "";
-  //       }
-  //       const isNoDamageFromAndDoubleDamageTo = noDamageTypes.some((type) =>
-  //         doubleDamageTo.some((noDb) => noDb.name === type.name)
-  //       );
-  //       if (isNoDamageFromAndDoubleDamageTo) {
-  //         return "";
-  //       }
-  //       console.log(
-  //         "isNoDamageFromAndDoubleDamageTo",
-  //         isNoDamageFromAndDoubleDamageTo
-  //       );
-  //       return ${typeWeakness} (no significant weakness);
-  //     });
-  //   };
-  // const filteredWeaknesses = calculateWeaknesses();
-
-  // console.log("type1", type1Data);
   return (
     <div className="flex flex-row gap-2 sm:px-0 ">
-      {filteredWeaknesses.length > 0 ? (
-        filteredWeaknesses.map((type, index) => (
+      {reducedTypes.length > 0 ? (
+        reducedTypes.map((type, index) => (
           <div
             className={`${getTypeColors([
               { type },
