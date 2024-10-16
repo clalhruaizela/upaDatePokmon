@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import PokemonChartDT from "../PkmChart";
 import PkmMdHeight from "../pkmMdHeight";
 import PokemonTypesWeakness from "../PkmMdType";
-import { PokemonData } from "../poke";
+import { Gender, PokemonData } from "../poke";
 import { getTypeColors } from "../utilities/typeColor";
 import { convertToFeet } from "../utilities/convertToFeet";
 import PkmEvolution from "../PkmEvolution";
@@ -18,7 +18,7 @@ import PkmMdSpecies from "../PkmMdSpecies";
 import PokemonVariety from "../subComp/pokemonVariety";
 import { useEffect, useState } from "react";
 import PokemonGender from "../PokemonGender";
-import { Generation, PokemonTypesData, Weakness } from "../pokeType";
+import { PokemonTypesData, Weakness } from "../pokeType";
 
 const fetchPokemonDetails = async (id: number) => {
   const url = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -38,6 +38,15 @@ const fetchPokemonType = async (pokemontype: string) => {
 
   return (await response.json()) as PokemonTypesData;
 };
+
+// const fetchPokemonGender = async (id: string) => {
+//   const response = await fetch(`https://pokeapi.co/api/v2/gender/${id}`);
+//   if (!response.ok) {
+//     throw new Error(`An error occurred: ${response.statusText}`);
+//   }
+//   return (await response.json()) as Gender;
+// };
+
 const capitalize = (str: string): string => {
   const updatedstr = str.replace(/-/g, " ");
   return updatedstr
@@ -54,6 +63,8 @@ const PokemonPageID = () => {
   const navigate = useNavigate();
   const currentId = parseInt(id!);
   const [weakness, setWeakness] = useState<Weakness[]>([]);
+  // const [pokemonGender, setPokemongender] = useState<Gender[]>([]);
+  // const [genderIcons, setGenderIcons] = useState<string>("Unknown");
   const { isLoading, isError, data } = useQuery({
     queryKey: [id],
     queryFn: async () => {
@@ -131,7 +142,7 @@ const PokemonPageID = () => {
         // console.log("Species data fetched:", speciesData);
         setPokemonVarient(speciesData);
       } else {
-        console.log("No data available");
+        console.log("PokemonPageID Species No data available");
       }
     };
     fetchData();
@@ -147,12 +158,45 @@ const PokemonPageID = () => {
         setWeakness((prev) => [...prev, ...doubleDamageTypes]);
       });
     }
-
-    // const fetchPokemonTypes = async (type: string) => {
-    //   const response = await fetchPokemonType(type);
-    //   return response;
-    // };
   }, [data]);
+
+  // useEffect(() => {
+  //   const fetchGenderData = async () => {
+  //     try {
+  //       const genderIds = data?.gender;
+
+  //       if (!genderIds || genderIds.length > 0) {
+  //         setGenderIcons("Unknown");
+  //         return;
+  //       }
+
+  //       const genderData = await Promise.all(
+  //         genderIds.map(async (gend) => {
+  //           return await fetchPokemonGender(gend.name);
+  //         })
+  //       );
+
+  //       setPokemongender(genderData);
+
+  //       console.log("parent Fetch Gender", genderIds);
+  //       const hasMale = genderData.some((gender) => gender.name === "Male");
+  //       const hasFemale = genderData.some((gender) => gender.name === "Female");
+
+  //       if (hasMale && hasFemale) {
+  //         setGenderIcons("♂️ & ♀️");
+  //       } else if (hasMale) {
+  //         setGenderIcons("♂️");
+  //       } else if (hasFemale) {
+  //         setGenderIcons("♀️");
+  //       } else {
+  //         setGenderIcons("Unknown");
+  //       }
+  //     } catch (error) {
+  //       console.error("Fail to load ", error);
+  //     }
+  //   };
+  //   fetchGenderData();
+  // }, [data]);
 
   if (isLoading) return "Loading";
   if (isError)
@@ -296,11 +340,10 @@ const PokemonPageID = () => {
                         </div>
                         {/* <div className="text-xl sm:text-2xl">♂︎{""}♀ </div> */}
                         <div>
-                          {data?.gender && (
-                            <PokemonGender
-                              genderRateId={genderRateId.toString()}
-                            />
-                          )}
+                          <PokemonGender
+                            pokemonGender={data?.gender || []}
+                            // genderIcons={genderIcons}
+                          />
                         </div>
                       </div>
                     </div>

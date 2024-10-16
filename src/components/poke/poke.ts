@@ -53,9 +53,13 @@ export interface Species {
 }
 
 export interface Gender {
-  name: string;
   id: number;
-  pokemon_species_details: { pokemon_species: { name: string; url: string } }[];
+  name: string;
+  pokemon_species_details: Array<{
+    pokemon_species: {
+      name: string;
+    };
+  }>;
 }
 // interface GenderRate {
 //   name: string;
