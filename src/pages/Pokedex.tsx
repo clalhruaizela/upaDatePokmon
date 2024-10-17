@@ -1,7 +1,7 @@
 import { PokemonData, PokemonList } from "@/components/poke/poke";
 import PokeCard from "@/components/poke/pokeCard";
 import SortPokemon from "@/components/poke/sortPokemon";
-
+import AOS from "aos";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/ui/Layout/layout";
 import {
@@ -47,7 +47,7 @@ const PokedexHome = () => {
   );
   const itemsPerPage = 21;
 
-  const { isLoading, isError, data, error } = useQuery({
+  const { isError, data, error } = useQuery({
     queryKey: ["data", page],
     queryFn: () => fetchPokemon(page),
   });
@@ -142,6 +142,16 @@ const PokedexHome = () => {
     }
   }, [submit, filteredPokemon.length]);
 
+  useEffect(() => {
+    AOS.init({
+      // Optional settings
+      offset: 200,
+      duration: 600,
+      easing: "ease-in-sine",
+      delay: 100,
+    });
+  }, []);
+
   // if (isLoading) return "Loading";
   if (isError) return `Error: ${error.message}`;
 
@@ -220,8 +230,19 @@ const PokedexHome = () => {
                       .includes(searchTerm.toLowerCase())
                   )
                   .map((pokemon) => (
-                    <div className="" key={pokemon.name}>
-                      <div className="text-black  p-4 flex justify-center md: transition duration-150 ease-in-out hover:ease-in-out hover:-translate-y-1">
+                    <div
+                      className="w-full md:w-auto "
+                      data-aos="fade-up"
+                      data-aos-offset="200"
+                      data-aos-delay="50"
+                      data-aos-duration="1000"
+                      data-aos-easing="ease-in-out"
+                      data-aos-mirror="true"
+                      data-aos-once="false"
+                      data-aos-anchor-placement="top-center"
+                      key={pokemon.name}
+                    >
+                      <div className="text-black  p-4 flex justify-center transition duration-150 ease-in-out hover:ease-in-out hover:-translate-y-1">
                         <PokeCard pokemonUrl={pokemon.url} />
                       </div>
                     </div>

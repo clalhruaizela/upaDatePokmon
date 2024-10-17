@@ -4,6 +4,14 @@ import PokemonAbilityDetail from "./PokemonAbilityEntry";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { FaExclamationCircle } from "react-icons/fa";
 
+const capitalize = (str: string): string => {
+  const updatedstr = str.replace(/-/g, " ");
+  return updatedstr
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join("-");
+};
+
 const fetchPokemonAbility = async (id: number | string) => {
   const response = await fetch(`https://pokeapi.co/api/v2/ability/${id}`);
   if (!response.ok) {
@@ -28,7 +36,7 @@ const PkmMdAbility = ({ abilityName }: { abilityName: string }) => {
   return (
     <div>
       <div className="flex flex-row ">
-        {data!.name}{" "}
+        {capitalize(data!.name)}{" "}
         <div className="pl-1 pt-1 ">
           <Popover>
             <PopoverTrigger>

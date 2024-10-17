@@ -72,14 +72,14 @@ const PokeCard = ({ pokemonUrl }: { pokemonUrl: string }) => {
                   />
                 </div>
                 <div className="w-full">
-                  <div>
+                  <div className="flex text-gray-500">
                     {" "}
                     <span>#{String(data.id).padStart(4, 0)}</span>{" "}
                   </div>
                   <h3 className="text-xl flex pt-2 pb-2 md:pl-0 md:pb-2 justify-start">
                     {capitalize(data?.name || "")}
                   </h3>
-                  <div className="flex flex-row  md:ml-0">
+                  <div className="flex flex-row gap-1 md:ml-0">
                     {data?.types.map((color) => {
                       return (
                         <div key={color.type.name}>
@@ -89,7 +89,7 @@ const PokeCard = ({ pokemonUrl }: { pokemonUrl: string }) => {
                             )}`}
                           >
                             <div
-                              className={`ml-1 px-4 rounded-sm ${getTypeColors([
+                              className={`ml-0 px-4 rounded-sm ${getTypeColors([
                                 color,
                               ])}`}
                             >
@@ -130,7 +130,7 @@ const PokeCard = ({ pokemonUrl }: { pokemonUrl: string }) => {
                     <div className=" bg-blue-400 px-2 w-36 pl-4 sm:pl-8 py-2 sm:w-52 rounded-sm grid grid-cols-6 ">
                       <div className="text-black  col-span-3">
                         <div className=" sm:py-1 text-white">Ability</div>
-                        <div className="text-xs sm:text-base">
+                        <div className="text-xs md:text-sm">
                           {data?.abilities?.length &&
                             data.abilities.length > 0 && (
                               <PkmMdAbility

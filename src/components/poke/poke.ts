@@ -144,7 +144,6 @@ export interface Sprites {
   versions?: Versions;
   animated?: Sprites;
 }
-
 export interface GenerationI {
   "red-blue": RedBlue;
   yellow: RedBlue;

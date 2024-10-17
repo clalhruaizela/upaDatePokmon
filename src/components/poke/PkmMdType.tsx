@@ -14,10 +14,11 @@ const PokemonTypesWeakness = ({ weakness }: { weakness: Weakness[] }) => {
     return acc;
   }, [] as typeof weakness);
 
+  const firstThreeTypes = reducedTypes.slice(0, 3);
   return (
     <div className="flex flex-row gap-2 sm:px-0 ">
-      {reducedTypes.length > 0 ? (
-        reducedTypes.map((type, index) => (
+      {firstThreeTypes.length > 0 ? (
+        firstThreeTypes.map((type, index) => (
           <div
             className={`${getTypeColors([
               { type },

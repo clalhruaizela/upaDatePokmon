@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import PokemonChartDT from "../PkmChart";
 import PkmMdHeight from "../pkmMdHeight";
 import PokemonTypesWeakness from "../PkmMdType";
-import { Gender, PokemonData } from "../poke";
+import { PokemonData } from "../poke";
 import { getTypeColors } from "../utilities/typeColor";
 import { convertToFeet } from "../utilities/convertToFeet";
 import PkmEvolution from "../PkmEvolution";
@@ -17,8 +17,8 @@ import { IoIosArrowDroprightCircle } from "react-icons/io";
 import PkmMdSpecies from "../PkmMdSpecies";
 import PokemonVariety from "../subComp/pokemonVariety";
 import { useEffect, useState } from "react";
-import PokemonGender from "../PokemonGender";
 import { PokemonTypesData, Weakness } from "../pokeType";
+import PokemonShiny from "../subComp/PokemonShiny";
 
 const fetchPokemonDetails = async (id: number) => {
   const url = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -38,15 +38,6 @@ const fetchPokemonType = async (pokemontype: string) => {
 
   return (await response.json()) as PokemonTypesData;
 };
-
-// const fetchPokemonGender = async (id: string) => {
-//   const response = await fetch(`https://pokeapi.co/api/v2/gender/${id}`);
-//   if (!response.ok) {
-//     throw new Error(`An error occurred: ${response.statusText}`);
-//   }
-//   return (await response.json()) as Gender;
-// };
-
 const capitalize = (str: string): string => {
   const updatedstr = str.replace(/-/g, " ");
   return updatedstr
@@ -63,8 +54,6 @@ const PokemonPageID = () => {
   const navigate = useNavigate();
   const currentId = parseInt(id!);
   const [weakness, setWeakness] = useState<Weakness[]>([]);
-  // const [pokemonGender, setPokemongender] = useState<Gender[]>([]);
-  // const [genderIcons, setGenderIcons] = useState<string>("Unknown");
   const { isLoading, isError, data } = useQuery({
     queryKey: [id],
     queryFn: async () => {
@@ -142,7 +131,7 @@ const PokemonPageID = () => {
         // console.log("Species data fetched:", speciesData);
         setPokemonVarient(speciesData);
       } else {
-        console.log("PokemonPageID Species No data available");
+        console.log("No data available");
       }
     };
     fetchData();
@@ -159,44 +148,6 @@ const PokemonPageID = () => {
       });
     }
   }, [data]);
-
-  // useEffect(() => {
-  //   const fetchGenderData = async () => {
-  //     try {
-  //       const genderIds = data?.gender;
-
-  //       if (!genderIds || genderIds.length > 0) {
-  //         setGenderIcons("Unknown");
-  //         return;
-  //       }
-
-  //       const genderData = await Promise.all(
-  //         genderIds.map(async (gend) => {
-  //           return await fetchPokemonGender(gend.name);
-  //         })
-  //       );
-
-  //       setPokemongender(genderData);
-
-  //       console.log("parent Fetch Gender", genderIds);
-  //       const hasMale = genderData.some((gender) => gender.name === "Male");
-  //       const hasFemale = genderData.some((gender) => gender.name === "Female");
-
-  //       if (hasMale && hasFemale) {
-  //         setGenderIcons("♂️ & ♀️");
-  //       } else if (hasMale) {
-  //         setGenderIcons("♂️");
-  //       } else if (hasFemale) {
-  //         setGenderIcons("♀️");
-  //       } else {
-  //         setGenderIcons("Unknown");
-  //       }
-  //     } catch (error) {
-  //       console.error("Fail to load ", error);
-  //     }
-  //   };
-  //   fetchGenderData();
-  // }, [data]);
 
   if (isLoading) return "Loading";
   if (isError)
@@ -272,11 +223,6 @@ const PokemonPageID = () => {
               </div>
             </div>
           </div>
-          {/* <div>
-            {abilities && abilities.length > 0 && (
-              <PokemonAbilityDetail abilities={abilities[0]} />
-            )}
-          </div> */}
 
           <div className="mt-20 sm:bg-[url('../src/assets/abstract-pattern.avif')] xl:w-7/12 xl:flex xl:justify-center xl:pb-8 xl:items-center">
             <div className="flex justify-center  bg-white flex-col items-center mx-11  sm:w-10/12 sm:mx-14 md:w-9/12 md:mx-28 lg:mx-12 lg:w-11/12 xl:w-10/12  xl:">
@@ -311,13 +257,13 @@ const PokemonPageID = () => {
                         </div>
                       </div>
                     </div>
-                    <div className=" col-span-6 lg:col-span-3 xxl:mr-36">
+                    <div className=" col-span-6 lg:col-span-3 xxl:mr-36 xxl:pt-1">
                       {id && (
                         <PkmMdHeight pokeUrl={id}>
                           {(data) => (
                             <div className="flex flex-col justify-center items-center">
                               <div className=" text-white text-lg">Height</div>
-                              <div className=" text-xl sm:">
+                              <div className=" text-xl xxl:pt-1">
                                 {convertToFeet(data.height)}
                               </div>
                             </div>
@@ -335,15 +281,16 @@ const PokemonPageID = () => {
                     </div>
                     <div className=" col-span-6 lg:col-span-3 xxl:mr-36">
                       <div className="flex flex-col justify-center items-center">
-                        <div className="sm:py-1 text-lg   text-white ">
+                        <div className="sm:pt-1 text-lg   text-white ">
                           Gender
                         </div>
-                        {/* <div className="text-xl sm:text-2xl">♂︎{""}♀ </div> */}
+                        <div className="text-xl sm:text-2xl ">♂︎{""}♀ </div>
                         <div>
-                          <PokemonGender
-                            pokemonGender={data?.gender || []}
-                            // genderIcons={genderIcons}
-                          />
+                          {/* {data?.gender && (
+                            <PokemonGender
+                              genderRateId={genderRateId.toString()}
+                            />
+                          )} */}
                         </div>
                       </div>
                     </div>
@@ -384,26 +331,7 @@ const PokemonPageID = () => {
                       </div>
                       <div className="text-xs sm:text-sm   flex flex-col  pt-1  w-full md:w-11/12   sm:py-1 ">
                         <div className="row-span-2">
-                          {/* {data && data?.length > 0 && (
-
-                              {data?.map((type, index) => (
-                                <PokemonTypesWeakness
-                                  key={index}
-                                  pokemonType={type.name}
-                                />
-                              ))}
-
-                          )} */}
-                          {/* <div className="row-span-2"> */}
-                          {/* {data?.types.map((t, index) => ( */}
-                          <PokemonTypesWeakness
-                            // key={index}
-                            // pokemonType={t.type.name}
-                            weakness={weakness}
-                            // setWeakness={setWeakness}
-                          />
-                          {/* ))} */}
-                          {/* </div> */}
+                          <PokemonTypesWeakness weakness={weakness} />
                         </div>
                       </div>
                     </div>
@@ -415,7 +343,17 @@ const PokemonPageID = () => {
                       </div>
                     ) : null}
                   </div>
+                  <div className="mt-3 md:ml-6 xl:ml-0 font-semibold">
+                    <div className="flex flex-row gap-1 ">
+                      {capitalize(data?.name)}
+                      <p>sprites</p>
+                    </div>
+                    <div className="">
+                      <PokemonShiny pokemonId={data?.id} />
+                    </div>
+                  </div>
                 </div>
+
                 <div className="sm:w-full lg:col-span-12">
                   {data?.id ? (
                     <PkmEvolution pokemonSpec={data?.id} />

@@ -8,6 +8,18 @@ const capitalize = (str: string): string => {
   return first.toLocaleUpperCase() + rest.join("");
 };
 
+const TypeBadge = ({ type }: { type: { name: string } }) => {
+  return (
+    <div
+      className={`px-2 rounded-md sm:flex flex-row justify-center items-center md:w-24 xl:w-20 xl: ${getTypeColors(
+        [{ type }]
+      )}`}
+    >
+      {capitalize(type.name)}
+    </div>
+  );
+};
+
 export interface PokemonCardProps {
   pokemonId: string;
   speciesName: string;
@@ -68,28 +80,12 @@ const EvoImageCard: React.FC<PokemonCardProps> = ({
           </p>
         </div>
       </div>
-      <div className="w-full">
+      <div className="w-full ">
         {pokemonType && (
-          <div>
-            <div className="flex flex-row justify-center items-center gap-1">
-              {pokemonType.types.map((type) => (
-                <div key={type.type.name}>
-                  <div
-                    className={`text-sm  rounded-sm ${getTypeColors(
-                      pokemonType.types
-                    )}`}
-                  >
-                    <div
-                      className={`px-4 sm:flex flex-row sm:justify-center sm:py-1 sm:w-28 rounded-md ${getTypeColors(
-                        [type]
-                      )}`}
-                    >
-                      {capitalize(type.type.name)}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+          <div className="flex flex-row justify-center items-center gap-1 ">
+            {pokemonType.types.map((typeSlot) => (
+              <TypeBadge key={typeSlot.type.name} type={typeSlot.type} />
+            ))}
           </div>
         )}
       </div>

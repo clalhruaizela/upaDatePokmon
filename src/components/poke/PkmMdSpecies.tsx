@@ -1,6 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchPokemonSpecies } from "./utilities/utility";
 
+const capitalize = (str: string): string => {
+  const updatedstr = str.replace(/-/g, " ");
+  return updatedstr
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" - ");
+};
+
 const PkmMdSpecies = ({ speciesDetails }: { speciesDetails: string }) => {
   const { isLoading, isError, error, data } = useQuery({
     queryKey: ["species", speciesDetails],
@@ -12,12 +20,12 @@ const PkmMdSpecies = ({ speciesDetails }: { speciesDetails: string }) => {
       <div>
         <div className="font-medium text-lg">Habitat</div>
         <div className="border w-36 px-4 py-1 rounded-sm flex justify-center ">
-          <div>unknown </div>
+          Unknown
         </div>
         <div className="pt-4">
           <div className="font-medium text-lg">Generation</div>
           <div className="border w-36 px-4 py-1 rounded-sm flex justify-center ">
-            unknown
+            Unknown
           </div>
         </div>
       </div>
@@ -30,17 +38,17 @@ const PkmMdSpecies = ({ speciesDetails }: { speciesDetails: string }) => {
         <div className=" flex flex-col">
           <div className="font-medium text-lg">Habitat </div>
           <div className="border w-36 px-4 py-1 rounded-sm flex justify-center ">
-            {data?.habitat?.name || ""}
+            {capitalize(data?.habitat?.name || " Unknown ")}
           </div>
         </div>
         <div className="pt-4">
           <div className="font-medium text-lg">Generation</div>
           <div className="border w-36 px-4 py-1 rounded-sm flex justify-center ">
-            {data?.generation.name || ""}
+            {capitalize(data?.generation.name || "Unknown")}
           </div>
         </div>
         <div>
-          <p>{data?.pokemon_species?.name || ""}</p>
+          <p>{capitalize(data?.pokemon_species?.name || "")}</p>
         </div>
       </div>
     </div>
