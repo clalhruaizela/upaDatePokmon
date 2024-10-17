@@ -3,9 +3,19 @@ import EvoImageCard from "./subComp/evoImage";
 import usePokemonEvolution from "./subComp/usePokemonEvolution";
 
 // Error display component
-const ErrorState = ({ message }: { message: string }) => (
-  <div className="bg-red-400 text-white p-4 text-center">
-    {/* <img src={} alt="Current Pokémon" className="mx-auto mb-2" /> */}
+const ErrorState = ({
+  message,
+  pokemonId,
+}: {
+  message: string;
+  pokemonId: number;
+}) => (
+  <div className=" text-white p-4 text-center ">
+    <img
+      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`}
+      alt="Current Pokémon"
+      className="mx-auto mb-2 border-white rounded-2xl  border-4"
+    />
     {message}
   </div>
 );
@@ -44,9 +54,18 @@ const PkmEvolution = ({ pokemonSpec }: { pokemonSpec: number }) => {
     evolutionData,
   } = usePokemonEvolution(pokemonSpec);
 
+  const pokemonId = pokemonSpec;
+
   if (speciesLoading || evolutionLoading) return <LoadingState />;
   if (speciesError || evolutionError) {
-    return <ErrorState message="This Pokémon does not evolve." />;
+    return (
+      <div className="flex justify-center items-center lg:justify-center mb-5  rounded-br-sm rounded-bl-3xl bg-red-400 text-white ml-8 sm:w-9/12 md:w-11/12 ">
+        <ErrorState
+          message="This Pokémon does not evolve."
+          pokemonId={pokemonId}
+        />
+      </div>
+    );
   }
 
   return (

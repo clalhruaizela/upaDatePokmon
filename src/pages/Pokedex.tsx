@@ -1,7 +1,6 @@
 import { PokemonData, PokemonList } from "@/components/poke/poke";
 import PokeCard from "@/components/poke/pokeCard";
 import SortPokemon from "@/components/poke/sortPokemon";
-import AOS from "aos";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/ui/Layout/layout";
 import {
@@ -141,16 +140,6 @@ const PokedexHome = () => {
       setErrorMessage("");
     }
   }, [submit, filteredPokemon.length]);
-
-  useEffect(() => {
-    AOS.init({
-      // Optional settings
-      offset: 200,
-      duration: 600,
-      easing: "ease-in-sine",
-      delay: 100,
-    });
-  }, []);
 
   // if (isLoading) return "Loading";
   if (isError) return `Error: ${error.message}`;
