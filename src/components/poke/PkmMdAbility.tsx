@@ -40,7 +40,6 @@ const PkmMdAbility = ({ abilityName }: { abilityName: string }) => {
         <div className="pl-1 pt-1 ">
           <Popover>
             <PopoverTrigger>
-              {" "}
               <FaExclamationCircle />
             </PopoverTrigger>
             <PopoverContent className="mx-7 iphoneSe:mr-11 iphone12Pro:mr-12  xs:mr-16 sm:mr-20 lg:ml-24">

@@ -19,6 +19,8 @@ import PokemonVariety from "../subComp/pokemonVariety";
 import { useEffect, useState } from "react";
 import { PokemonTypesData, Weakness } from "../pokeType";
 import PokemonShiny from "../subComp/PokemonShiny";
+import GrowthRate from "../subComp/GrowthRate";
+import GrowthRates from "../subComp/GrowthRate";
 
 const fetchPokemonDetails = async (id: number) => {
   const url = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -38,6 +40,27 @@ const fetchPokemonType = async (pokemontype: string) => {
 
   return (await response.json()) as PokemonTypesData;
 };
+
+const fetchGrowthRate = async (idOrName: string) => {
+  try {
+    const response = await fetch(
+      `https://pokeapi.co/api/v2/growth-rate/${idOrName}/`
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error fetching growth rate: ${response.statusText}`);
+    }
+
+    const growthRateData = await response.json();
+    console.log("Fetched Growth Rate Data:", growthRateData);
+
+    return growthRateData;
+  } catch (error) {
+    console.error("Failed to fetch growth rate data:", error);
+    return null;
+  }
+};
+
 const capitalize = (str: string): string => {
   const updatedstr = str.replace(/-/g, " ");
   return updatedstr
@@ -68,7 +91,7 @@ const PokemonPageID = () => {
   const [pokemonVarient, setPokemonVarient] = useState<PokemonData | null>(
     null
   );
-
+  const [growthRate, setGrowthRate] = useState<string | null>(null);
   const prevId = currentId === MIN_POKEMON_ID ? MAX_POKEMON_ID : currentId - 1;
   const nextId = currentId === MAX_POKEMON_ID ? MIN_POKEMON_ID : currentId + 1;
 
@@ -119,6 +142,7 @@ const PokemonPageID = () => {
       }
     }
   };
+
   // console.log("pokemonVarient", pokemonVarient);
   // console.log(data);
   useEffect(() => {
@@ -126,16 +150,31 @@ const PokemonPageID = () => {
       if (data) {
         // console.log("Data available:", data);
         const response = await fetch(data.species.url);
-        // console.log("Fetching species data from:", data.species.url);
+        console.log("Fetching species data from:", data.species.url);
         const speciesData: PokemonData = await response.json();
         // console.log("Species data fetched:", speciesData);
         setPokemonVarient(speciesData);
       } else {
-        console.log("No data available");
+        console.log("useEFFECT No data available");
       }
     };
     fetchData();
   }, [data]);
+
+  useEffect(() => {
+    const fetchGrowthRateData = async () => {
+      if (pokemonVarient?.growth_rate) {
+        console.log("Fetch growth rate from:", pokemonVarient.growth_rate.name);
+        const growthRateData = await fetchGrowthRate(
+          pokemonVarient.growth_rate.name
+        );
+        if (growthRateData) {
+          setGrowthRate(growthRateData.name); // or any other relevant data from growthRateData
+        }
+      }
+    };
+    fetchGrowthRateData();
+  }, [pokemonVarient]);
 
   useEffect(() => {
     if (data) {
@@ -248,7 +287,7 @@ const PokemonPageID = () => {
                         <div className=" sm:py-1 text-white text-lg">
                           Ability
                         </div>
-                        <div className="text-xl sm:">
+                        <div className="text- sm:">
                           {data!.abilities.length > 0 && (
                             <PkmMdAbility
                               abilityName={data!.abilities[0].ability.name}
@@ -342,6 +381,9 @@ const PokemonPageID = () => {
                         <PkmMdSpecies speciesDetails={data.name} />
                       </div>
                     ) : null}
+                  </div>
+                  <div className=" mt-3  md:ml-6  xl:ml-0 ">
+                    {pokemonVarient && <GrowthRates growthRate={growthRate} />}
                   </div>
                   <div className="mt-3 md:ml-6 xl:ml-0 font-semibold">
                     <div className="flex flex-row gap-1 ">

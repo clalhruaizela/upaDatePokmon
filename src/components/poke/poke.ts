@@ -37,6 +37,7 @@ export interface PokemonData {
   gender: Gender[];
   weight: number;
   // chain: PokemonEvolution;
+  growth_rate: GrowthRate[];
   count: number;
   results: Result[];
   varieties: Varieties[];
@@ -240,6 +241,7 @@ export interface PokemonSpeciesData {
   habitat: { name: string };
   pokemon_species: { name: string; url: string };
   generation: { name: string };
+  egg_groups: Array<{ name: string }>;
   varieties: Array<{
     name: string;
     url: string;
@@ -252,11 +254,11 @@ export interface PokemonStatSlot {
   };
   base_stat: number;
 }
-// export type PokemonAPINameData = {
-//   name: string;
-//   url: string;
-// };
 
+export interface GrowthRate {
+  name: string;
+  descriptions: Array<{ description: string; language: { name: string } }>;
+}
 export interface EvolutionDetail {
   trigger: {
     name: string;

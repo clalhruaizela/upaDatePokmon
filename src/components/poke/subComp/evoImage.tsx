@@ -76,7 +76,7 @@ const EvoImageCard: React.FC<PokemonCardProps> = ({
         <div className=" pb-3 flex flex-row md:text-2xl lg:basis-1/3">
           <p>{capitalize(speciesName)}</p>
           <p className="text-gray-500 pl-2">
-            #{String(pokemonId).padStart(3, "0")}
+            {/* #{String(pokemonId).padStart(3, "0")} */}
           </p>
         </div>
       </div>

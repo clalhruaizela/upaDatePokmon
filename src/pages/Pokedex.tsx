@@ -245,7 +245,7 @@ const PokedexHome = () => {
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                       (item) => {
                         if (
-                          Math.abs(item - page) <= 1 ||
+                          Math.abs(item - page) <= 2 ||
                           item === 1 ||
                           item === totalPages
                           // ||
@@ -266,7 +266,7 @@ const PokedexHome = () => {
                           );
                         } else if (
                           (item === 2 && page > 3) ||
-                          (item === totalPages - 1 && page < totalPages - 2)
+                          (item === totalPages - 2 && page < totalPages - 2)
                           // (item % 3 === 0 && Math.abs(item - page) <= 2)
                         ) {
                           return <PaginationEllipsis key={item} />;

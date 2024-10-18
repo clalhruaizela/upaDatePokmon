@@ -6,17 +6,20 @@ import usePokemonEvolution from "./subComp/usePokemonEvolution";
 const ErrorState = ({
   message,
   pokemonId,
+  speciesName,
 }: {
   message: string;
   pokemonId: number;
+  speciesName: string;
 }) => (
-  <div className=" text-white p-4 text-center ">
-    <img
-      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${pokemonId}.png`}
-      alt="Current Pokémon"
-      className="mx-auto mb-2 border-white rounded-2xl  border-4"
-    />
-    {message}
+  <div className="sm:flex sm:items-center sm:justify-center sm:w-full lg:flex  lg:justify-center lg:w-full lg:items-center lg:mb-2  lg:pl-4 xl:pl-0">
+    <div className="items-center flex-col  flex lg:w-full   mb-5 lg:justify-evenly  gap-3 lg:gap-0 text-white sm:ml sm:w-9/12 xxl:gap-10">
+      {message}
+      <EvoImageCard
+        pokemonId={pokemonId.toString()}
+        speciesName={speciesName}
+      />
+    </div>
   </div>
 );
 
@@ -55,14 +58,16 @@ const PkmEvolution = ({ pokemonSpec }: { pokemonSpec: number }) => {
   } = usePokemonEvolution(pokemonSpec);
 
   const pokemonId = pokemonSpec;
+  const speciesData = pokemonSpec;
 
   if (speciesLoading || evolutionLoading) return <LoadingState />;
   if (speciesError || evolutionError) {
     return (
-      <div className="flex justify-center items-center lg:justify-center mb-5  rounded-br-sm rounded-bl-3xl bg-red-400 text-white ml-8 sm:w-9/12 md:w-11/12 ">
+      <div className="flex justify-center items-center  lg:justify-center  py-3 mb-6 mt-3  rounded-br-sm rounded-bl-3xl bg-red-400 text-white  sm:w-9/12 md:w-full ">
         <ErrorState
           message="This Pokémon does not evolve."
           pokemonId={pokemonId}
+          speciesName={speciesData.toString()}
         />
       </div>
     );

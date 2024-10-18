@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { PokemonData, Sprites } from "../poke";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { HiOutlineSwitchHorizontal } from "react-icons/hi";
 // Make sure to import your types
 
 // const fetchShinyPokemon = async (name: string) => {
@@ -67,10 +68,14 @@ const PokemonShiny = ({ pokemonId }: { pokemonId: string | undefined }) => {
         </div>
       )}
       <Button
-        variant={"destructive"}
+        variant={"default"}
         onClick={() => setShowBackSprites((prev) => !prev)}
       >
-        {showBackSprites ? "Show Front Sprites" : "Show Back Sprites"}
+        {showBackSprites ? (
+          <HiOutlineSwitchHorizontal />
+        ) : (
+          <HiOutlineSwitchHorizontal />
+        )}
       </Button>
     </div>
   );
