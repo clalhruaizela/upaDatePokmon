@@ -19,8 +19,8 @@ import PokemonVariety from "../subComp/pokemonVariety";
 import { useEffect, useState } from "react";
 import { PokemonTypesData, Weakness } from "../pokeType";
 import PokemonShiny from "../subComp/PokemonShiny";
-import GrowthRate from "../subComp/GrowthRate";
 import GrowthRates from "../subComp/GrowthRate";
+import PokemonLocation from "../subComp/location";
 
 const fetchPokemonDetails = async (id: number) => {
   const url = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -75,6 +75,7 @@ const MIN_POKEMON_ID = 1;
 const PokemonPageID = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  // const pokemonId = parseInt(id!);
   const currentId = parseInt(id!);
   const [weakness, setWeakness] = useState<Weakness[]>([]);
   const { isLoading, isError, data } = useQuery({
@@ -119,20 +120,14 @@ const PokemonPageID = () => {
     // console.log("handleVarietyChange called with", selectedVariety);
 
     if (pokemonVarient) {
-      // console.log("pokemonVarient is defined", pokemonVarient);
-
       const selectedVarietyData = pokemonVarient?.varieties?.find(
         (pokemon) => pokemon.pokemon.name === selectedVariety
       );
-      // console.log("selectedVarietyData", selectedVarietyData);
       if (selectedVarietyData) {
         if (!selectedVarietyData?.is_default) {
-          // console.log("selectedVarietyData found", selectedVarietyData);
           const response = await fetch(selectedVarietyData.pokemon.url);
-          // console.log("Fetched data from", selectedVarietyData.pokemon.url);
           const varietyDetails: PokemonData = await response.json();
           navigate(`/pokemon/${varietyDetails.id}`);
-          // console.log("Updated pokemonVarient with", varietyDetails);
         } else {
           console.log("selectedVarietyData not found for", selectedVariety);
           navigate(`/pokemon/${pokemonVarient.id}`);
@@ -146,19 +141,17 @@ const PokemonPageID = () => {
   // console.log("pokemonVarient", pokemonVarient);
   // console.log(data);
   useEffect(() => {
-    const fetchData = async () => {
-      if (data) {
+    if (data) {
+      const fetchData = async () => {
         // console.log("Data available:", data);
         const response = await fetch(data.species.url);
-        console.log("Fetching species data from:", data.species.url);
+        // console.log("Fetching species data from:", data.species.url);
         const speciesData: PokemonData = await response.json();
         // console.log("Species data fetched:", speciesData);
         setPokemonVarient(speciesData);
-      } else {
-        console.log("useEFFECT No data available");
-      }
-    };
-    fetchData();
+      };
+      fetchData();
+    }
   }, [data]);
 
   useEffect(() => {
@@ -276,8 +269,11 @@ const PokemonPageID = () => {
                       className="bg-gray- h-80 w-full mt-4 sm:w-9/12 md:w-7/12 lg: md:aspect-square sm:h-full rounded-sm"
                     />
                   </div>
-                  <div className="w-full sm:w-9/12 sm:text md:basis-1/3 md:ml-6    lg:ml-6 lg:col-span-6 xl:">
+                  <div className="w-full sm:w-9/12 sm:text md:w-11/12 md:ml-6  lg:ml-6 lg:col-span-6 xl:">
                     <PokemonChartDT />
+                  </div>
+                  <div className="mt-6 flex justify-center items-center w-full sm:w-9/12 sm:text md:w-11/12 md:ml-6  lg:ml-6 lg:col-span-6">
+                    <PokemonLocation pokemonId={currentId} />
                   </div>
                 </div>
                 <div className="lg:col-span-6 ">
@@ -323,7 +319,7 @@ const PokemonPageID = () => {
                         <div className="sm:pt-1 text-lg   text-white ">
                           Gender
                         </div>
-                        <div className="text-xl sm:text-2xl ">♂︎{""}♀ </div>
+                        <div className="text-xl sm:text-2xl">♂︎♀</div>
                         <div>
                           {/* {data?.gender && (
                             <PokemonGender

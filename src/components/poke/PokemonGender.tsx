@@ -1,9 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { icons } from "lucide-react";
-// import { Gender } from "./poke";
-
-// import { Gender } from "./poke";
-
 interface Gender {
   id: number;
   name: string;

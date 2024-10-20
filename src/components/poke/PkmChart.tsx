@@ -41,7 +41,7 @@ const PokemonChartDT = () => {
   console.log("chart", pokemon);
   return (
     <div className="w-full flex justify-center items-center">
-      <div className=" h-full flex flex-col justify-center items-center bg-green-300 ">
+      <div className=" h-full flex flex-col justify-center items-center  ">
         <h1 className="font-bold pt-4 text-xl sm:text-2xl">Stats</h1>
         <ChartContainer
           config={chartConfig}
@@ -85,7 +85,7 @@ const PokemonChartDT = () => {
               />
               <LabelList
                 dataKey="number"
-                position="insideRight"
+                position="right"
                 offset={8}
                 className="fill-[--color-label]"
                 fontSize={12}

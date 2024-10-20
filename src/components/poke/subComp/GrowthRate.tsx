@@ -1,5 +1,5 @@
 interface GrowthRateProps {
-  GrowthRate: string | null;
+  growthRate: string | null;
 }
 const capitalize = (str: string): string => {
   const updatedstr = str.replace(/-/g, " ");
