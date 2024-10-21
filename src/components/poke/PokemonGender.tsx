@@ -1,62 +1,77 @@
 import { useQuery } from "@tanstack/react-query";
-interface Gender {
-  id: number;
-  name: string;
-  pokemon_species_details: Array<{
-    pokemon_species: {
-      name: string;
-    };
-  }>;
+import React from "react";
+
+interface GenderProps {
+  idOrName: string | number;
 }
 
-const fetchPokemonGender = async (id: string) => {
-  const response = await fetch(`https://pokeapi.co/api/v2/gender/${id}`);
-  if (!response.ok) {
-    throw new Error(`An error occurred: ${response.statusText}`);
+// Fetch Pokémon species to get gender_rate
+const fetchPokemonSpecies = async (idOrName: string | number) => {
+  try {
+    const response = await fetch(
+      `https://pokeapi.co/api/v2/pokemon-species/${idOrName}`
+    );
+    if (!response.ok) {
+      throw new Error(`An error occurred: ${response.statusText}`);
+    }
+    const data = await response.json();
+    console.log("Fetched species data for:", idOrName, data); // Log the fetched data for debugging
+    return data;
+  } catch (error) {
+    console.error("Error fetching Pokémon species data:", error);
+    throw error;
   }
-  return (await response.json()) as Gender;
 };
-const PokemonGender = ({ pokemonGender }: { pokemonGender: Gender[] }) => {
-  const { isLoading, isError, data } = useQuery({
-    queryKey: [pokemonGender],
-    queryFn: async () => {
-      const genderId = pokemonGender.map((gender) => gender.id);
-      return await Promise.all(genderId.map(fetchPokemonGender));
-    },
-    enabled: pokemonGender.length > 0,
+
+// Calculate gender percentages, with a safeguard against undefined or null genderRate
+const calculateGenderPercentage = (genderRate: number | null | undefined) => {
+  if (genderRate === undefined || genderRate === null || genderRate === -1) {
+    return { malePercentage: 0, femalePercentage: 0 };
+  }
+  const femalePercentage = genderRate * 12.5;
+  const malePercentage = 100 - femalePercentage;
+  return { malePercentage, femalePercentage };
+};
+
+const PokemonGender: React.FC<GenderProps> = ({ idOrName }) => {
+  const { isLoading, isError, error, data } = useQuery({
+    queryKey: ["pokemonGender", idOrName],
+    queryFn: async () => fetchPokemonSpecies(idOrName),
   });
 
-  const genderIcons = data
-    ? data
-        .reduce((icons: string[], gender: Gender) => {
-          if (gender.name === "male") icons.push("♂️");
-          else if (gender.name === "female") icons.push("♀️");
-          return icons;
-        }, [])
-        .join(" & ") || "Unknown"
-    : "Unknown";
+  if (isLoading) return <div>Loading Gender...</div>;
 
-  // console.log("GenderRATE Id", pokemonGender);
-  if (isLoading) return "Loading Gender...";
-  if (isError) return "Error loading Gender.";
+  if (isError) {
+    console.error("Error fetching gender data:", error); // Log the error for debugging
+    return <div>Error loading Gender.</div>;
+  }
+
+  const genderRate = data?.gender_rate;
+
+  // If the gender rate is -1, the Pokémon is genderless
+  if (genderRate === -1) {
+    return <div>This Pokémon is genderless.</div>;
+  }
+
+  // Ensure we don't encounter NaN in percentage calculations
+  const { malePercentage, femalePercentage } =
+    calculateGenderPercentage(genderRate);
+
   return (
-    <div>
-      <div>{genderIcons}</div>
-      {data?.length > 0 ? (
-        data?.map((gender) => (
-          <div key={gender.id}>
-            <h3>{gender.name}</h3>
-            <ul>
-              {gender.pokemon_species_details.map((species, index) => (
-                <li key={index}>{species.pokemon_species.name}</li>
-              ))}
-            </ul>
-          </div>
-        ))
-      ) : (
-        <p>No gender data available</p>
-      )}
+    <div className="bg-red-400 ">
+      <div>Gender</div>
+      <div className="flex flex-row gap-2">
+        <div className="">
+          <strong>Male: </strong>{" "}
+          {isNaN(malePercentage) ? "N/A" : malePercentage}%
+        </div>
+        <div>
+          <strong>Female: </strong>{" "}
+          {isNaN(femalePercentage) ? "N/A" : femalePercentage}%
+        </div>
+      </div>
     </div>
   );
 };
+
 export default PokemonGender;

@@ -240,38 +240,44 @@ const PokedexHome = () => {
               )}
             </div>
             <div className="flex w-full  md:w-9/12 xxl:w-8/12 bg-white  md:pb-4">
-              {!submit && (
+              {totalPages > 1 && (
                 // {totalPages > 1 && (
                 <Pagination className="py-5 w-24 border-t-2 md:py-10 ">
                   <PaginationContent>
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                       (item) => {
                         if (
-                          Math.abs(item - page) <= 2 ||
                           item === 1 ||
-                          item === totalPages
+                          item === totalPages ||
+                          Math.abs(page - item) <= 2 // Checks if the page number (item) is close enough to the current page (within 2 pages),
                           // ||
                           // (item % 3 === 0 && Math.abs(item - page) <= 2)
                         ) {
                           return (
                             <PaginationItem key={item}>
-                              <Button
-                                variant={"secondary"}
+                              <PaginationLink
+                                className="bg-black"
+                                isActive={item === page}
                                 onClick={() => {
                                   window.scrollTo(0, 0);
                                   handlePageChange(item);
                                 }}
                               >
                                 {item}
-                              </Button>
+                              </PaginationLink>
                             </PaginationItem>
                           );
                         } else if (
-                          (item === 2 && page > 3) ||
-                          (item === totalPages - 2 && page < totalPages - 2)
+                          item === page - 3 ||
+                          item === page + 3
                           // (item % 3 === 0 && Math.abs(item - page) <= 2)
                         ) {
-                          return <PaginationEllipsis key={item} />;
+                          return (
+                            <PaginationEllipsis
+                              key={item}
+                              className="text-black"
+                            />
+                          );
                           // return <span key={item}></span>;
                         }
                         return null;

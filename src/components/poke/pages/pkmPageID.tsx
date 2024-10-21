@@ -21,6 +21,7 @@ import { PokemonTypesData, Weakness } from "../pokeType";
 import PokemonShiny from "../subComp/PokemonShiny";
 import GrowthRates from "../subComp/GrowthRate";
 import PokemonLocation from "../subComp/location";
+import PokemonGender from "../PokemonGender";
 
 const fetchPokemonDetails = async (id: number) => {
   const url = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -276,6 +277,9 @@ const PokemonPageID = () => {
                   </div>
                   <div className="mt-6 flex justify-center items-center w-full sm:w-9/12 sm:text md:w-11/12 md:ml-6  lg:ml-6 lg:col-span-6">
                     <PokemonLocation pokemonId={currentId} />
+                  </div>
+                  <div>
+                    {data?.name ? <PokemonGender idOrName={data.name} /> : null}
                   </div>
                 </div>
                 <div className="lg:col-span-6 ">

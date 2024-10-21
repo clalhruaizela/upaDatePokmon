@@ -39,7 +39,7 @@ const PkmMdSpecies = ({ speciesDetails }: { speciesDetails: string }) => {
     queryKey: ["species", speciesDetails],
     queryFn: async () => fetchPokemonSpecies(speciesDetails),
   });
-  console.log("pokemon species", speciesData);
+  // console.log("pokemon species", speciesData);
 
   if (isError)
     return (
