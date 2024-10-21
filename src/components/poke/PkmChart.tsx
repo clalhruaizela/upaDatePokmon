@@ -1,5 +1,5 @@
-import { useLocation } from "react-router-dom";
-import { PokemonStatSlot } from "./poke";
+import { useParams } from "react-router-dom";
+import { PokemonData, PokemonStatSlot } from "./poke";
 import {
   ChartConfig,
   ChartContainer,
@@ -14,10 +14,19 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useEffect, useState } from "react";
 
 const capitalize = (str: string): string => {
   const [first, ...rest] = str;
   return first.toLocaleUpperCase() + rest.join("");
+};
+
+const fetchPokemonState = async (id: number | string) => {
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+  if (!response.ok) {
+    throw new Error(`An error occurred: ${response.statusText}`);
+  }
+  return (await response.json()) as PokemonData;
 };
 
 const chartConfig = {
@@ -28,17 +37,33 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const PokemonChartDT = () => {
-  const location = useLocation();
-  const pokemon = location.state?.pokemon;
+  const [pokemon, setPokemon] = useState<PokemonData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { id } = useParams<{ id: string }>();
 
+  useEffect(() => {
+    const loadPokemon = async () => {
+      try {
+        const data = await fetchPokemonState(id);
+        setPokemon(data);
+      } catch (err) {
+        setError((err as Error).message);
+      }
+    };
+    loadPokemon();
+  }, [id]);
+
+  if (error) {
+    return <div>Error:{error} </div>;
+  }
   if (!pokemon) {
-    return <div></div>;
+    return <div>Loading ...</div>;
   }
   const chartData = pokemon.stats.map((stat: PokemonStatSlot) => ({
     statName: capitalize(stat.stat.name),
     number: stat.base_stat,
   }));
-  console.log("chart", pokemon);
+  // console.log("chart", pokemon);
   return (
     <div className="w-full flex justify-center items-center">
       <div className=" h-full flex flex-col justify-center items-center  ">

@@ -42,7 +42,7 @@ const PokemonLocation = ({ pokemonId }: { pokemonId: number }) => {
         Pokemon Location
       </div>
       {locationArea.length > 0 ? (
-        <ul className="border w-64 max-h-56 overflow-y-auto space-y-0  px-4 pt-2 pb-4 rounded-sm flex flex-col justify-center ">
+        <ul className="border w-64 max-h-56 overflow-y-auto space-y-0  px-4 mt-5  pb-4 rounded-sm flex flex-col justify-center ">
           {locationArea.map(
             (location: { location_area: { name: string } }, index: number) => (
               <li className="border-b-2 py-2 flex justify-center" key={index}>

@@ -208,14 +208,16 @@ const PokemonPageID = () => {
                 </span>
                 {prevPokemon && (
                   <span className="hidden lg:flex lg:pl-2 lg:text-2xl">
-                    {capitalize(prevPokemon.name)}
+                    {/* {capitalize(prevPokemon.name)} */}
+                    {prevPokemon.name}
                   </span>
                 )}
               </div>
               <div className="col-span-3 flex justify-end items-center bg-gray-400 py-4 ">
                 {nextPokemon && (
                   <span className="hidden lg:flex  lg:pr-3 lg:text-2xl">
-                    {capitalize(nextPokemon.name)}
+                    {/* {capitalize(nextPokemon.name)} */}
+                    {nextPokemon.name}
                   </span>
                 )}
                 <span className="mr-10 sm:mr-64 sm:text-base sm:font-bold text-white lg:text-2xl lg:mr-0 xl:text-sm">

@@ -17,7 +17,7 @@ const fetchPokemonSpecies = async (speciesDetails: string) => {
     const eggGroups = speciesData.egg_groups || [];
     const habitat = speciesData.habitat?.name || null;
     const generation = speciesData.generation.name || null;
-    const baseHappiness = speciesData.base_happiness.name ?? null;
+    const baseHappiness = speciesData.base_happiness ?? null;
     return {
       eggGroups,
       habitat,
@@ -39,8 +39,37 @@ const PkmMdSpecies = ({ speciesDetails }: { speciesDetails: string }) => {
     queryKey: ["species", speciesDetails],
     queryFn: async () => fetchPokemonSpecies(speciesDetails),
   });
+  console.log("pokemon species", speciesData);
 
-  if (isError) return <div>Error loading species data.</div>;
+  if (isError)
+    return (
+      <div>
+        <div>
+          <div className="font-medium text-lg">Egg Group</div>
+          <div className="border w-40 px-4 py-1 rounded-sm flex justify-center">
+            Unknown
+          </div>
+        </div>
+        <div>
+          <div className="font-medium text-lg">Habitat</div>
+          <div className="border w-40 px-4 py-1 rounded-sm flex justify-center">
+            Unknown
+          </div>
+        </div>
+        <div>
+          <div className="font-medium text-lg">Generation</div>
+          <div className="border w-40 px-4 py-1 rounded-sm flex justify-center">
+            Unknown
+          </div>
+        </div>
+        <div>
+          <div className="font-medium text-lg">Base Happiness</div>
+          <div className="border w-40 px-4 py-1 rounded-sm flex justify-center">
+            Unknown
+          </div>
+        </div>
+      </div>
+    );
   if (isLoading) return <div>Loading species...</div>;
 
   return (

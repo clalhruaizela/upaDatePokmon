@@ -1,6 +1,6 @@
-import { PokemonData, PokemonList } from "@/components/poke/poke";
+import { PokemonList } from "@/components/poke/poke";
 import PokeCard from "@/components/poke/pokeCard";
-import SortPokemon from "@/components/poke/sortPokemon";
+// import SortPokemon from "@/components/poke/sortPokemon";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/ui/Layout/layout";
 import {
@@ -8,15 +8,16 @@ import {
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
+  PaginationLink,
 } from "@/components/ui/pagination";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectGroup,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -41,10 +42,11 @@ const PokedexHome = () => {
   const [submit, setSubmit] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
-  const [page, setPage] = useState<number>(
-    parseInt(searchParams.get("page") || "1")
-  );
+  const page = parseInt(searchParams.get("page") || "1");
+
   const itemsPerPage = 21;
+  const MAX_POKEMON_ID = 1025;
+  const MIN_POKEMON_ID = 1;
 
   const { isError, data, error } = useQuery({
     queryKey: ["data", page],
@@ -52,10 +54,12 @@ const PokedexHome = () => {
   });
 
   // console.log("pokedex data", data);
-  const totalPages = Math.ceil((data?.count || 0) / itemsPerPage);
+  const totalPages = Math.ceil(
+    (MAX_POKEMON_ID - MIN_POKEMON_ID + 1) / itemsPerPage
+  );
 
   const handlePageChange = (page: number) => {
-    setPage(page);
+    // setPage(page);
     setSearchParams(
       (param) => {
         param.set("page", page.toString());
@@ -85,19 +89,19 @@ const PokedexHome = () => {
     }
   };
 
-  useEffect(() => {
-    if (!page) {
-      setSearchParams(
-        (param) => {
-          param.set("page", "1");
-          return param;
-        },
-        {
-          preventScrollReset: true,
-        }
-      );
-    }
-  }, [page, setSearchParams]);
+  // useEffect(() => {
+  //   if (!page) {
+  //     setSearchParams(
+  //       (param) => {
+  //         param.set("page", "1");
+  //         return param;
+  //       },
+  //       {
+  //         preventScrollReset: true,
+  //       }
+  //     );
+  //   }
+  // }, [page, setSearchParams]);
 
   // Debounce the search term to avoid multiple re-renders while typing
   useEffect(() => {
@@ -151,6 +155,7 @@ const PokedexHome = () => {
   }
 
   const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = Math.ceil(startIndex + itemsPerPage);
 
   return (
     <Layout>
@@ -198,7 +203,7 @@ const PokedexHome = () => {
             <div>{/* <SortPokemon pokemonData={pokemonData} /> */}</div>
             <div
               className="flex flex-col md:grid md:grid-cols-3  min-h-screen md:gap-4  md:w-9/12  xl:w-8/12   bg-white md:py-6 "
-              start={startIndex + 1}
+              // start={startIndex + 1}
             >
               {errorMessage ? (
                 <div className="min-h-screen md:col-span-3 ">
@@ -213,24 +218,20 @@ const PokedexHome = () => {
                 </div>
               ) : (
                 filteredPokemon
+                  .filter((pokemon) => {
+                    const pokemonId = parseInt(
+                      pokemon.url.split("/").filter(Boolean).pop() || "0"
+                    );
+                    return pokemonId <= MAX_POKEMON_ID;
+                  })
+                  .slice(0, endIndex)
                   .filter((pokemon) =>
                     pokemon.name
                       .toLowerCase()
                       .includes(searchTerm.toLowerCase())
                   )
                   .map((pokemon) => (
-                    <div
-                      className="w-full md:w-auto "
-                      data-aos="fade-up"
-                      data-aos-offset="200"
-                      data-aos-delay="50"
-                      data-aos-duration="1000"
-                      data-aos-easing="ease-in-out"
-                      data-aos-mirror="true"
-                      data-aos-once="false"
-                      data-aos-anchor-placement="top-center"
-                      key={pokemon.name}
-                    >
+                    <div className="w-full md:w-auto " key={pokemon.name}>
                       <div className="text-black  p-4 flex justify-center transition duration-150 ease-in-out hover:ease-in-out hover:-translate-y-1">
                         <PokeCard pokemonUrl={pokemon.url} />
                       </div>
@@ -240,6 +241,7 @@ const PokedexHome = () => {
             </div>
             <div className="flex w-full  md:w-9/12 xxl:w-8/12 bg-white  md:pb-4">
               {!submit && (
+                // {totalPages > 1 && (
                 <Pagination className="py-5 w-24 border-t-2 md:py-10 ">
                   <PaginationContent>
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(

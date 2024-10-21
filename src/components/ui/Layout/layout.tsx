@@ -7,8 +7,12 @@ import {
 import { useNavigate } from "react-router-dom";
 import Registrations from "@/components/siginUp";
 import { CgPokemon } from "react-icons/cg";
+
 const Layout = ({ children }) => {
   const navigate = useNavigate();
+  const handleNavigate = () => {
+    navigate("/pokemon");
+  };
   return (
     <div className="min-h-screen flex flex-col h-full">
       <header className="flex justify-center">
@@ -17,7 +21,7 @@ const Layout = ({ children }) => {
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuTrigger
-                  onClick={() => navigate("/pokemon")}
+                  onClick={handleNavigate}
                   className="flex flex-col sm:my-1 md:my-3"
                 >
                   <div>
