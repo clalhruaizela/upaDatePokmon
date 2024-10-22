@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PokemonData } from "../poke";
 import { getTypeColors } from "../utilities/typeColor";
+import { Item } from "@radix-ui/react-navigation-menu";
 
 const capitalize = (str: string): string => {
   const [first, ...rest] = str;
@@ -19,6 +20,19 @@ const TypeBadge = ({ type }: { type: { name: string } }) => {
     </div>
   );
 };
+const fetchEvolutionTrigger = async (evolutionChainUrl: string) => {
+  try {
+    const response = await fetch(evolutionChainUrl);
+    if (!response.ok) {
+      throw new Error(`Error fetching evolution chain: ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data.chain; // Return the chain object
+  } catch (error) {
+    console.error("Error fetching evolution details:", error);
+    throw error;
+  }
+};
 
 export interface PokemonCardProps {
   pokemonId: string;
@@ -31,6 +45,8 @@ const EvoImageCard: React.FC<PokemonCardProps> = ({
 }) => {
   const navigator = useNavigate();
   const [pokemonType, setPokemonType] = useState<PokemonData | null>(null);
+  const [evolutionChain, setEvolutionChain] = useState<any[]>([]);
+  const [evolutionTrigger, setEvolutionTrigger] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPokemonDetails = async () => {
@@ -44,9 +60,32 @@ const EvoImageCard: React.FC<PokemonCardProps> = ({
           );
           return;
         }
-        const data = await response.json();
-        // console.log("Pokemon data fetched:", data);
-        setPokemonType(data);
+        const pokemonData = await response.json();
+        setPokemonType(pokemonData);
+
+        const speciesResponse = await fetch(
+          `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`
+        );
+        if (!speciesResponse.ok) {
+          throw new Error(
+            `Error fetching species data: ${speciesResponse.statusText}`
+          );
+        }
+        const speciesData = await speciesResponse.json();
+
+        const evolutionChain = await fetchEvolutionTrigger(
+          speciesData.evolution_chain.url
+        );
+        let evolution = evolutionChain;
+        while (evolution && evolution.species.name !== pokemonData.name) {
+          evolution = evolution.evolves_to[0];
+        }
+
+        const evolutionDetails = evolution?.evolution_details[0] || null;
+        const trigger = evolutionDetails?.trigger.name || null;
+        const item = evolutionDetails?.item?.name || null;
+
+        setEvolutionTrigger(trigger ? { trigger, item } : null);
       } catch (error) {
         console.error("Error fetching Pokémon details:", error);
       }
@@ -89,6 +128,16 @@ const EvoImageCard: React.FC<PokemonCardProps> = ({
           </div>
         )}
       </div>
+
+      {evolutionTrigger && (
+        <div className="mt-4 text-center">
+          <p>{capitalize(evolutionTrigger.trigger)}</p>
+          {evolutionTrigger.item && (
+            <p>({capitalize(evolutionTrigger.item)})</p>
+          )}
+          <div className="">⬇️</div>
+        </div>
+      )}
     </div>
   );
 };

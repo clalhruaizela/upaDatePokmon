@@ -239,9 +239,10 @@ export interface PokemonSpeciesData {
   name: string;
   id: number;
   habitat: { name: string };
+  base_happiness: { name: string };
   pokemon_species: { name: string; url: string };
   generation: { name: string };
-  egg_groups: Array<{ name: string }>;
+  egg_groups: { name: string; url: string };
   varieties: Array<{
     name: string;
     url: string;

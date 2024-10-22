@@ -19,9 +19,7 @@ import PokemonVariety from "../subComp/pokemonVariety";
 import { useEffect, useState } from "react";
 import { PokemonTypesData, Weakness } from "../pokeType";
 import PokemonShiny from "../subComp/PokemonShiny";
-import GrowthRates from "../subComp/GrowthRate";
 import PokemonLocation from "../subComp/location";
-import PokemonGender from "../PokemonGender";
 
 const fetchPokemonDetails = async (id: number) => {
   const url = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -40,26 +38,6 @@ const fetchPokemonType = async (pokemontype: string) => {
   }
 
   return (await response.json()) as PokemonTypesData;
-};
-
-const fetchGrowthRate = async (idOrName: string) => {
-  try {
-    const response = await fetch(
-      `https://pokeapi.co/api/v2/growth-rate/${idOrName}/`
-    );
-
-    if (!response.ok) {
-      throw new Error(`Error fetching growth rate: ${response.statusText}`);
-    }
-
-    const growthRateData = await response.json();
-    console.log("Fetched Growth Rate Data:", growthRateData);
-
-    return growthRateData;
-  } catch (error) {
-    console.error("Failed to fetch growth rate data:", error);
-    return null;
-  }
 };
 
 const capitalize = (str: string): string => {
@@ -93,7 +71,7 @@ const PokemonPageID = () => {
   const [pokemonVarient, setPokemonVarient] = useState<PokemonData | null>(
     null
   );
-  const [growthRate, setGrowthRate] = useState<string | null>(null);
+
   const prevId = currentId === MIN_POKEMON_ID ? MAX_POKEMON_ID : currentId - 1;
   const nextId = currentId === MAX_POKEMON_ID ? MIN_POKEMON_ID : currentId + 1;
 
@@ -156,21 +134,6 @@ const PokemonPageID = () => {
   }, [data]);
 
   useEffect(() => {
-    const fetchGrowthRateData = async () => {
-      if (pokemonVarient?.growth_rate) {
-        console.log("Fetch growth rate from:", pokemonVarient.growth_rate.name);
-        const growthRateData = await fetchGrowthRate(
-          pokemonVarient.growth_rate.name
-        );
-        if (growthRateData) {
-          setGrowthRate(growthRateData.name); // or any other relevant data from growthRateData
-        }
-      }
-    };
-    fetchGrowthRateData();
-  }, [pokemonVarient]);
-
-  useEffect(() => {
     if (data) {
       data.types.map(async (type) => {
         const pokemonTypes = await fetchPokemonType(type.type.name);
@@ -184,19 +147,13 @@ const PokemonPageID = () => {
 
   if (isLoading) return "Loading";
   if (isError)
-    return <div>Error fetching Pokémon details: Pokkemon not found</div>;
+    return (
+      <div>PokemonPageID Error fetching Pokémon details: Pokemon not found</div>
+    );
 
-  // const abilities = data?.abilities.map(
-  //   (ability: { ability: { name: string } }) => ability.ability.name
-  // );
   return (
     <Layout>
       <div className="h-full w-screen lg:mb-28 xl:mb-0">
-        {/* {isLoading ?(
-        <div>
-          <Skeleton/>
-        </div>
-        ): data?(  */}
         <div className=" xl:flex xl:flex-col xl:justify-center xl:items-center xl:bg-[url('../src/assets/black-angled-paper-slits-design-free-vector.jpg')]">
           <div className="sm:bg-white   h-32 w-full  xl:flex xl:justify-center xl:flex-col xl:items-center xl:w-7/12 xl: xl:pt-6 ">
             <div className="grid grid-cols-6 w-full mb-2 gap-1 mt-6  xl:mt-20  ">
@@ -278,9 +235,6 @@ const PokemonPageID = () => {
                   <div className="mt-6 flex justify-center items-center w-full sm:w-9/12 sm:text md:w-11/12 md:ml-6  lg:ml-6 lg:col-span-6">
                     <PokemonLocation pokemonId={currentId} />
                   </div>
-                  <div>
-                    {data?.name ? <PokemonGender idOrName={data.name} /> : null}
-                  </div>
                 </div>
                 <div className="lg:col-span-6 ">
                   <div className=" bg-blue-400 my-4 w- py-4 gap-6 xxl:gap-2 sm:ml-16 sm:w-9/12 md:w-11/12 md:ml-6 xl:ml-0 lg:w-11/12 lg:py-8 sm:py-4 sm:rounded-md rounded-sm grid grid-cols-6 lg:mt-4 ">
@@ -326,18 +280,8 @@ const PokemonPageID = () => {
                           Gender
                         </div>
                         <div className="text-xl sm:text-2xl">♂︎♀</div>
-                        <div>
-                          {/* {data?.gender && (
-                            <PokemonGender
-                              genderRateId={genderRateId.toString()}
-                            />
-                          )} */}
-                        </div>
                       </div>
                     </div>
-                    {/* <div>
-                      <PokemonShape shapeId="" />
-                    </div> */}
                   </div>
 
                   <div className="w-full grid grid-cols-6 px- sm:px-20 md:px-1 md:basis-1/3 md:ml-6 xl:ml-0 lg:mt-10 ">
@@ -384,9 +328,9 @@ const PokemonPageID = () => {
                       </div>
                     ) : null}
                   </div>
-                  <div className=" mt-3  md:ml-6  xl:ml-0 ">
+                  {/* <div className=" mt-3  md:ml-6  xl:ml-0 ">
                     {pokemonVarient && <GrowthRates growthRate={growthRate} />}
-                  </div>
+                  </div> */}
                   <div className="mt-3 md:ml-6 xl:ml-0 font-semibold">
                     <div className="flex flex-row gap-1 ">
                       {capitalize(data?.name)}

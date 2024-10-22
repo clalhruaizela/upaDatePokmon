@@ -50,7 +50,14 @@ const PokemonGender: React.FC<GenderProps> = ({ idOrName }) => {
 
   // If the gender rate is -1, the Pokémon is genderless
   if (genderRate === -1) {
-    return <div>This Pokémon is genderless.</div>;
+    return (
+      <div>
+        <div className="font-semibold text-xl">Gender</div>
+        <div className="border w-60 px-2 py-2 font-medium rounded-sm ">
+          This Pokémon is genderless.
+        </div>
+      </div>
+    );
   }
 
   // Ensure we don't encounter NaN in percentage calculations
@@ -58,14 +65,14 @@ const PokemonGender: React.FC<GenderProps> = ({ idOrName }) => {
     calculateGenderPercentage(genderRate);
 
   return (
-    <div className="bg-red-400 ">
-      <div>Gender</div>
-      <div className="flex flex-row gap-2">
-        <div className="">
+    <div className=" ">
+      <div className="font-medium text-xl">Gender</div>
+      <div className="flex flex-row ">
+        <div className="border w-32 px-4 py-1 rounded-sm flex justify-center">
           <strong>Male: </strong>{" "}
           {isNaN(malePercentage) ? "N/A" : malePercentage}%
         </div>
-        <div>
+        <div className="border w-32 px-4 py-1 rounded-sm flex justify-center">
           <strong>Female: </strong>{" "}
           {isNaN(femalePercentage) ? "N/A" : femalePercentage}%
         </div>

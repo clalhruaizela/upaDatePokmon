@@ -2,13 +2,14 @@ interface GrowthRateProps {
   growthRate: string | null;
 }
 const capitalize = (str: string): string => {
-  const updatedstr = str.replace(/-/g, " ");
-  return updatedstr
+  const updatedStr = str.replace(/-/g, " ");
+  return updatedStr
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
 };
-const GrowthRates: React.FC<GrowthRateProps> = ({ growthRate }) => {
+
+const GrowthRates: React.FC<GrowthRateProps> = ({ growthRates }) => {
   if (!growthRate) {
     return <div> Loading...</div>;
   }
