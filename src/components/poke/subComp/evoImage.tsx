@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PokemonData } from "../poke";
 import { getTypeColors } from "../utilities/typeColor";
-import { Item } from "@radix-ui/react-navigation-menu";
 
 const capitalize = (str: string): string => {
   const [first, ...rest] = str;
@@ -128,16 +127,6 @@ const EvoImageCard: React.FC<PokemonCardProps> = ({
           </div>
         )}
       </div>
-
-      {evolutionTrigger && (
-        <div className="mt-4 text-center">
-          <p>{capitalize(evolutionTrigger.trigger)}</p>
-          {evolutionTrigger.item && (
-            <p>({capitalize(evolutionTrigger.item)})</p>
-          )}
-          <div className="">⬇️</div>
-        </div>
-      )}
     </div>
   );
 };
