@@ -9,8 +9,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { typeColors } from "../utilities/typeColor";
 // import { moveCategory } from "../utilities/utility";
-
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const capitalize = (str: string): string => {
   const updatedstr = str.replace(/-/g, " ");
@@ -27,45 +26,98 @@ const fetchPokemonMove = async (name: string) => {
       throw new Error(`An error occured:${response.statusText}`);
     }
     const pokemonData = await response.json();
+    // console.log("Pokemon Data:", pokemonData); // Log Pokemon data
+    // console.log("Moves:", pokemonData.moves);
 
     const moves = await Promise.all(
       pokemonData.moves.map(async (moveEntry: any) => {
         const moveResponse = await fetch(moveEntry.move.url);
         const moveDetails = await moveResponse.json();
 
-        const firstGenerationDetails = moveEntry.version_group_details.find(
+        const redBlueDetails = moveEntry.version_group_details.find(
           (versionDetails: any) =>
-            versionDetails.version_group.name === "red-blue" ||
+            versionDetails.version_group.name === "red-blue"
+        );
+        const yellowDetails = moveEntry.version_group_details.find(
+          (versionDetails: any) =>
             versionDetails.version_group.name === "yellow"
         );
 
-        if (!firstGenerationDetails) {
-          return null;
-        }
-
         return {
+          // category:moveDetails.version_group_details[0].move_learn_category.name,
+
           moveName: moveEntry.move.name,
-          method:
-            moveEntry.version_group_details[0]?.move_learn_method?.name || "-",
-          level: moveEntry.version_group_details[0]?.level_learned_at || "-",
+          redBlueGeneration: redBlueDetails?.version_group.name || "-",
+          redBlueMethod: redBlueDetails?.move_learn_method?.name || "-",
+          redBlueLevel: redBlueDetails?.level_learned_at || "-",
+          yellowGeneration: yellowDetails?.version_group.name || "-",
+          yellowMethod: yellowDetails?.move_learn_method?.name || "-",
+          yellowLevel: yellowDetails?.level_learned_at || "-",
           power: moveDetails.power || "-",
           accuracy: moveDetails.accuracy || "-",
           type: moveDetails.type.name,
-          // category:moveDetails.version_group_details[0].move_learn_category.name,
-          generation: firstGenerationDetails.version_group.name,
         };
       })
     );
 
-    const firstGenMoves = moves.filter((move) => move !== null);
-
-    const levelUpMove = firstGenMoves.filter(
-      (move) => move.method === "level-up"
+    const redBlueMoves = moves.filter(
+      (move) => move.redBlueGeneration === "red-blue"
     );
-    const eggMoves = firstGenMoves.filter((move) => move.method === "egg");
-    const tmMoves = firstGenMoves.filter((move) => move.method === "machine");
+    const yellowMoves = moves.filter(
+      (move) => move.yellowGeneration === "yellow"
+    );
 
-    return { levelUpMove, eggMoves, tmMoves };
+    const redBlueLevelUpMove = redBlueMoves
+      .filter((move) => move.redBlueMethod === "level-up")
+      .sort((a, b) => {
+        if (a.redBlueLevel === "-") return 1;
+        if (b.redBlueLevel === "-") return -1;
+        return a.redBlueLevel - b.redBlueLevel;
+      });
+    // console.log("Red Blue Level Up Moves:", redBlueLevelUpMove);
+    const redBlueEggMoves = redBlueMoves.filter(
+      (move) => move.redBlueMethod === "egg"
+    );
+    // console.log("Red Blue Egg Moves:", redBlueEggMoves);
+    const redBlueTmMoves = redBlueMoves.filter(
+      (move) => move.redBlueMethod === "machine"
+    );
+    // const redBlueHmMoves = redBlueMoves.filter(
+    //   (move) => move.redBlueMethod === "hidden-machine"
+    // );
+
+    const yellowLevelUpMove = yellowMoves
+      .filter((move) => move.yellowMethod === "level-up")
+      .sort((a, b) => {
+        if (a.yellowLevel === "-") return 1;
+        if (b.yellowLevel === "-") return -1;
+        return a.yellowLevel - b.yellowLevel;
+      });
+    const yellowEggMoves = yellowMoves.filter(
+      (move) => move.yellowMethod === "egg"
+    );
+    const yellowTmMoves = yellowMoves.filter(
+      (move) => move.yellowMethod === "machine"
+    );
+    const yellowHmMoves = yellowMoves.filter(
+      (move) => move.yellowMethod === "hidden-machine"
+    );
+    console.log("tm yellow move", yellowTmMoves);
+    console.log("Hm yellow move", yellowHmMoves);
+    return {
+      redBlue: {
+        levelUpMove: redBlueLevelUpMove,
+        eggMoves: redBlueEggMoves,
+        tmMoves: redBlueTmMoves,
+        // hmMoves: redBlueHmMoves,
+      },
+      yellow: {
+        levelUpMove: yellowLevelUpMove,
+        eggMoves: yellowEggMoves,
+        tmMoves: yellowTmMoves,
+        // hmMoves: yellowHmMoves,
+      },
+    };
   } catch (error) {
     console.error("Error", error);
     throw error;
@@ -82,7 +134,7 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
   });
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error Pokemon Move</div>;
-
+  console.log("redBlue", pokemonMoveData);
   const renderMoveTable = (moves: any[]) => (
     <Table>
       <TableHeader className="bg-red-300">
@@ -98,7 +150,10 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
       <TableBody>
         {moves.map((move) => (
           <TableRow key={move.moveName}>
-            <TableCell className=""> {move.level || "-"} </TableCell>
+            <TableCell className="">
+              {" "}
+              {move.redBlueLevel || move.yellowLevel || "-"}
+            </TableCell>
             <TableCell> {capitalize(move.moveName)} </TableCell>
             <TableCell
               className={`border rounded-md mt-2 p-2 items-center flex justify-center ${
@@ -128,54 +183,131 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
   );
 
   return (
-    <div className="grid grid-cols-6 w-full gap-2">
-      <div className="col-span-3">
-        <div>
-          <div className="text-lg font-bold pt-4">Move learn by level up</div>
-          {pokemonMoveData?.levelUpMove &&
-          pokemonMoveData.levelUpMove.length > 0 ? (
-            renderMoveTable(pokemonMoveData.levelUpMove)
-          ) : (
-            <div> This pokemon cannot learn move </div>
-          )}
-        </div>
-        <div className="">
-          <div className="text-lg font-bold pt-4">Egg moves</div>
-          {pokemonMoveData?.eggMoves && pokemonMoveData.eggMoves.length > 0 ? (
-            renderMoveTable(pokemonMoveData.eggMoves)
-          ) : (
-            <div className="pt-2 pb-8">
-              This Pokemon cannot learn any moves by breeding
+    <>
+      <Tabs defaultValue="tab1">
+        <TabsList>
+          <TabsTrigger value="tab1">Red/Blue</TabsTrigger>
+          <TabsTrigger value="tab2">Yellow</TabsTrigger>
+        </TabsList>
+        <TabsContent value="tab1">
+          <div className="grid grid-cols-6 w-full gap-2">
+            <div className="col-span-3">
+              <div>
+                <div className="text-lg font-bold pt-4">
+                  Move learn by level up
+                </div>
+                <div>
+                  {capitalize(name)} learns the following moves in Pokémon Red &
+                  Blue at the levels specified.
+                </div>
+                {pokemonMoveData?.redBlue?.levelUpMove &&
+                pokemonMoveData.redBlue.levelUpMove.length > 0 ? (
+                  renderMoveTable(pokemonMoveData.redBlue.levelUpMove)
+                ) : (
+                  <div> This pokemon cannot learn move </div>
+                )}
+              </div>
+              <div className="">
+                <div className="text-lg font-bold pt-4">Egg moves</div>
+                {pokemonMoveData?.redBlue.eggMoves &&
+                pokemonMoveData.redBlue.eggMoves.length > 0 ? (
+                  renderMoveTable(pokemonMoveData.redBlue.eggMoves)
+                ) : (
+                  <div className="pt-2 pb-8">
+                    This Pokemon cannot learn any moves by breeding
+                  </div>
+                )}
+              </div>
+              {/* <div className="">
+                <div className="text-lg font-bold pt-4">Move learn by HM</div>
+                {pokemonMoveData?.redBlue.hmMoves &&
+                pokemonMoveData.redBlue.hmMoves.length > 0 ? (
+                  renderMoveTable(pokemonMoveData.redBlue.hmMoves)
+                ) : (
+                  <div className="pt-2 pb-8">
+                    This Pokemon cannot learn any moves by HM
+                  </div>
+                )}
+              </div> */}
             </div>
-          )}
-        </div>
-      </div>
-      <div className="col-span-3">
-        <div className="text-lg font-bold pt-4">Move learn by TM</div>
-        {pokemonMoveData?.tmMoves && pokemonMoveData.tmMoves.length > 0 ? (
-          renderMoveTable(pokemonMoveData.tmMoves)
-        ) : (
-          <div className="pt-2 pb-8">
-            This Pokemon cannot be taught any TM moves
+            <div className="col-span-3">
+              <div className="text-lg font-bold pt-4">Move learn by TM</div>
+              <div>
+                {capitalize(name)} is compatible with these Technical Machines
+                in Pokémon Red & Blue:
+              </div>
+              {pokemonMoveData?.redBlue.tmMoves &&
+              pokemonMoveData.redBlue.tmMoves.length > 0 ? (
+                renderMoveTable(pokemonMoveData.redBlue.tmMoves)
+              ) : (
+                <div className="pt-2 pb-8">
+                  This Pokemon cannot be taught any TM moves
+                </div>
+              )}
+            </div>
           </div>
-        )}
-      </div>
-    </div>
+        </TabsContent>
+        <TabsContent value="tab2">
+          <div className="grid grid-cols-6 w-full gap-2">
+            <div className="col-span-3">
+              <div>
+                <div className="text-lg font-bold pt-4">
+                  Move learn by level up
+                </div>
+                <p>
+                  {capitalize(name)} learns the following moves in Pokémon
+                  Yellow at the levels specified.
+                </p>
+                {pokemonMoveData?.yellow?.levelUpMove &&
+                pokemonMoveData.yellow.levelUpMove.length > 0 ? (
+                  renderMoveTable(pokemonMoveData.yellow.levelUpMove)
+                ) : (
+                  <div> This pokemon cannot learn move </div>
+                )}
+              </div>
+              {/* <div className="">
+                <div className="text-lg font-bold pt-4">Move learn by HM</div>
+                {pokemonMoveData?.yellow.hmMoves &&
+                pokemonMoveData.yellow.hmMoves.length > 0 ? (
+                  renderMoveTable(pokemonMoveData.yellow.hmMoves)
+                ) : (
+                  <div className="pt-2 pb-8">
+                    This Pokemon cannot learn any moves by HM
+                  </div>
+                )}
+              </div> */}
+              <div className="">
+                <div className="text-lg font-bold pt-4">Egg moves</div>
+                {pokemonMoveData?.yellow.eggMoves &&
+                pokemonMoveData.yellow.eggMoves.length > 0 ? (
+                  renderMoveTable(pokemonMoveData.yellow.eggMoves)
+                ) : (
+                  <div className="pt-2 pb-8">
+                    This Pokemon cannot learn any moves by breeding
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="col-span-3">
+              <div className="text-lg font-bold pt-4">Move learn by TM</div>
+              <div>
+                {capitalize(name)} is compatible with these Technical Machines
+                in Pokémon Yellow:
+              </div>
+              {pokemonMoveData?.yellow.tmMoves &&
+              pokemonMoveData.yellow.tmMoves.length > 0 ? (
+                renderMoveTable(pokemonMoveData.yellow.tmMoves)
+              ) : (
+                <div className="pt-2 pb-8">
+                  This Pokemon cannot be taught any TM moves
+                </div>
+              )}
+            </div>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </>
   );
 };
 
 export default PokemonMoveDetails;
-
-// {
-//   /* <Tabs defaultValue="tab1">
-//         <TabsList>
-//           <TabsTrigger value="tab1">List 1</TabsTrigger>
-//           <TabsTrigger value="tab2">List 2</TabsTrigger>
-//         </TabsList>
-//         <TabsContent value="tab1">
-
-//         </TabsContent>
-//         <TabsContent value="tab2"></TabsContent>
-
-//     </Tabs> */
-// }
