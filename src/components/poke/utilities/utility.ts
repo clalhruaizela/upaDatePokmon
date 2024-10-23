@@ -47,3 +47,9 @@ export const getFriendshipRating = (friendship: number | null): string => {
   if (friendship <= 255) return "High";
   return "Very High"; // For any unexpected values
 };
+
+export const moveCategory: { [key: string]: string } = {
+  physical: "/src/assets/move-physical.png",
+  special: "/src/assets/move-special.png",
+  status: "/src/assets/move-status.png",
+};

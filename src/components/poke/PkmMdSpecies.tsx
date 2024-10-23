@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getFriendshipRating } from "./utilities/utility";
+import { useState } from "react";
 
 const capitalizeGen = (str: string): string => {
   const [first, ...rest] = str;
@@ -75,6 +76,7 @@ const fetchPokemonSpecies = async (speciesDetails: string) => {
   }
 };
 const PkmMdSpecies = ({ speciesDetails }: { speciesDetails: string }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   const {
     isLoading,
     isError,
@@ -84,6 +86,10 @@ const PkmMdSpecies = ({ speciesDetails }: { speciesDetails: string }) => {
     queryFn: async () => fetchPokemonSpecies(speciesDetails),
   });
   // console.log("pokemon species", speciesData);
+
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   if (isError)
     return (
@@ -124,8 +130,8 @@ const PkmMdSpecies = ({ speciesDetails }: { speciesDetails: string }) => {
         <div className="grid-cols-6 grid gap-4 mr-4 border-b-2 border-t-2 pt-2 pb-3 ">
           <div className="col-span-6 font-bold text-xl ">Breeding</div>
           <div className="col-span-3 ">
-            <div className="font-medium text-">Egg Group</div>
-            <div className="border flex flex-row justify-center rounded-sm py-1">
+            <div className="font-medium ">Egg Group</div>
+            <div className="border flex flex-row justify-center  rounded-sm py-1">
               {speciesData?.eggGroups.length > 0 ? (
                 speciesData?.eggGroups.map(
                   (group: { name: string }, index: number) => (
@@ -152,7 +158,7 @@ const PkmMdSpecies = ({ speciesDetails }: { speciesDetails: string }) => {
               )}
             </div>
           </div>
-          <div className="col-span-3 mb-4 ">
+          <div className="col-span-3 mb-4  ">
             {speciesData?.genderRate !== null ? (
               speciesData?.genderRate === -1 ? (
                 <div>
@@ -164,7 +170,7 @@ const PkmMdSpecies = ({ speciesDetails }: { speciesDetails: string }) => {
               ) : (
                 <div>
                   <div className=" font-medium">Gender</div>
-                  <div className="flex flex-row border rounded-sm justify-center py-2">
+                  <div className="flex flex-row border rounded-sm justify-center py-2 px-2 text-sm">
                     <p className="text-blue-500">
                       {100 - (speciesData?.genderRate / 8) * 100}% Male
                     </p>
@@ -184,13 +190,13 @@ const PkmMdSpecies = ({ speciesDetails }: { speciesDetails: string }) => {
         <div className="grid grid-cols-6 gap-4 mr-4 border-b-2 py-4">
           <div className="col-span-6 font-bold text-xl">Training</div>
           <div className="col-span-3">
-            <div className="font-medium text-lg">Base Friendship</div>
-            <div className="border  py-2 rounded-sm flex justify-center">
+            <div className="font-medium text-lg ">Friendship</div>
+            <div className="border  py-2 rounded-sm flex items-center justify-center">
               {speciesData?.baseFriendship !== null &&
               speciesData?.baseFriendship !== undefined ? (
                 <>
                   <div> {speciesData.baseFriendship} </div>
-                  <div className="text-gray-500 text-sm py-1">
+                  <div className="text-gray-500 text-sm ">
                     ({speciesData.friendShipRating} )
                   </div>
                 </>
@@ -201,11 +207,16 @@ const PkmMdSpecies = ({ speciesDetails }: { speciesDetails: string }) => {
           </div>
           <div className="col-span-3">
             <div className="font-medium text-lg">Catch Rate</div>
-            <div className="border  py-2 rounded-sm flex justify-center">
+            <div
+              className={`border px-1 p-2 rounded-sm flex  justify-center overflow-hidden ${
+                isExpanded ? "max-h-full" : "max-h-10"
+              } transition-all duration-300 `}
+              onClick={toggleExpand}
+            >
               {speciesData?.catchRate !== null ? (
-                <div className="flex flex-row gap-1">
+                <div className="flex flex-row gap-1 md:items-center lg:items-start">
                   {speciesData?.catchRate}{" "}
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 text-sm  ">
                     ({((speciesData?.catchRate / 255) * 100).toFixed(2)}% with
                     PokèBall, Full HP)
                   </p>
@@ -227,12 +238,16 @@ const PkmMdSpecies = ({ speciesDetails }: { speciesDetails: string }) => {
           </div>
           <div className="mb-4 col-span-3">
             <div className="font-medium text-lg">EV Yield</div>
-            <div className="border px-2 py-1 rounded-sm flex justify-center">
+            <div className="border px-2 py-1 rounded-sm">
               {speciesData?.evYield && speciesData.evYield.length > 0 ? (
                 speciesData.evYield.map(
                   (ev: { stat: string; ev: number }, index: number) => (
-                    <div key={index}>
-                      {ev.ev} {capitalize(ev.stat)}
+                    <div
+                      key={index}
+                      className="flex flex-row justify-center items-center"
+                    >
+                      {ev.ev}{" "}
+                      <p className=" text-sm  pl-1">{capitalize(ev.stat)}</p>
                     </div>
                   )
                 )

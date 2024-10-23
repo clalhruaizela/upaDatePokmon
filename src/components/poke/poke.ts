@@ -101,6 +101,7 @@ export interface Move {
 export interface VersionGroupDetail {
   level_learned_at: number;
   move_learn_method: Species;
+  // move_learn_category: Species;
   version_group: Species;
 }
 

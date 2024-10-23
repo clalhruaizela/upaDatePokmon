@@ -20,6 +20,8 @@ import { useEffect, useState } from "react";
 import { PokemonTypesData, Weakness } from "../pokeType";
 import PokemonShiny from "../subComp/PokemonShiny";
 import PokemonLocation from "../subComp/location";
+import PokemonDetails from "../subComp/PokemonMoveDetails";
+import PokemonMoveDetails from "../subComp/PokemonMoveDetails";
 
 const fetchPokemonDetails = async (id: number) => {
   const url = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
@@ -216,7 +218,7 @@ const PokemonPageID = () => {
             </div>
           </div>
 
-          <div className="mt-20 sm:bg-[url('../src/assets/abstract-pattern.avif')] xl:w-7/12 xl:flex xl:justify-center xl:pb-8 xl:items-center">
+          <div className="mt-20 sm:bg-[url('../src/assets/abstract-pattern.avif')] xl:w-7/12 xl:flex flex-col xl:justify-center xl:pb- xl:items-center">
             <div className="flex justify-center  bg-white flex-col items-center mx-11  sm:w-10/12 sm:mx-14 md:w-9/12 md:mx-28 lg:mx-12 lg:w-11/12 xl:w-10/12  xl:">
               <div className="lg:grid lg:grid-cols-12">
                 <div className="lg:col-span-6">
@@ -351,9 +353,11 @@ const PokemonPageID = () => {
                 </div>
               </div>
             </div>
+            <div className=" bg-white flex justify-center items-center w-10/12">
+              {data?.name ? <PokemonMoveDetails name={data.name} /> : "unknown"}
+            </div>
           </div>
         </div>
-        {/* )} */}
       </div>
     </Layout>
   );
