@@ -88,22 +88,6 @@ const PokedexHome = () => {
       setSuggestion([]);
     }
   };
-
-  // useEffect(() => {
-  //   if (!page) {
-  //     setSearchParams(
-  //       (param) => {
-  //         param.set("page", "1");
-  //         return param;
-  //       },
-  //       {
-  //         preventScrollReset: true,
-  //       }
-  //     );
-  //   }
-  // }, [page, setSearchParams]);
-
-  // Debounce the search term to avoid multiple re-renders while typing
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (searchTerm.length > 0) {

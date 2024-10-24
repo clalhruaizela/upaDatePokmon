@@ -4,6 +4,7 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     screens: {
+      samsungS8: "360px",
       iphoneSe: "375px",
       iphone12Pro: "390px",
       xs: "414px",

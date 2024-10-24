@@ -2,6 +2,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Routes } from "react-router-dom";
 import PokemonPageID from "./components/poke/pages/pkmPageID";
 import PokedexHome from "./pages/Pokedex";
+import GenerationTwo from "./components/poke/subComp/subPaginationPages/GenerationTwo";
+import GenerationThree from "./components/poke/subComp/subPaginationPages/GenerationThree";
+import GenerationOne from "./components/poke/subComp/subPaginationPages/GenerationOne";
 
 const queryClient = new QueryClient();
 function App() {
@@ -15,6 +18,9 @@ function App() {
           <Routes>
             <Route path="/pokemon" element={<PokedexHome />} />
             <Route path="/pokemon/:id" element={<PokemonPageID />} />
+            <Route path="/pokemon/:id/move/1" element={<GenerationOne />} />
+            <Route path="/pokemon/:id/move/2" element={<GenerationTwo />} />
+            <Route path="/pokemon/:id/move/3" element={<GenerationThree />} />
           </Routes>
         </>
       </QueryClientProvider>

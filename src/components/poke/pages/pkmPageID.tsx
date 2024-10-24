@@ -20,7 +20,6 @@ import { useEffect, useState } from "react";
 import { PokemonTypesData, Weakness } from "../pokeType";
 import PokemonShiny from "../subComp/PokemonShiny";
 import PokemonLocation from "../subComp/location";
-import PokemonDetails from "../subComp/PokemonMoveDetails";
 import PokemonMoveDetails from "../subComp/PokemonMoveDetails";
 
 const fetchPokemonDetails = async (id: number) => {
@@ -353,7 +352,7 @@ const PokemonPageID = () => {
                 </div>
               </div>
             </div>
-            <div className=" bg-white flex justify-center items-center w-10/12">
+            <div className=" bg-white flex justify-center items-center w-10/12  lg:w-11/12 lg:ml-12 lg: md:w-9/12 xl:w-10/12 xl:ml-0 xl: md:ml-28">
               {data?.name ? <PokemonMoveDetails name={data.name} /> : "unknown"}
             </div>
           </div>

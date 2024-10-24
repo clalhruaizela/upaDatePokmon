@@ -8,8 +8,16 @@ import {
 } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
 import { typeColors } from "../utilities/typeColor";
-// import { moveCategory } from "../utilities/utility";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+} from "@/components/ui/pagination";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import GenerationTwo from "./subPaginationPages/GenerationTwo";
 
 const capitalize = (str: string): string => {
   const updatedstr = str.replace(/-/g, " ");
@@ -26,13 +34,23 @@ const fetchPokemonMove = async (name: string) => {
       throw new Error(`An error occured:${response.statusText}`);
     }
     const pokemonData = await response.json();
-    // console.log("Pokemon Data:", pokemonData); // Log Pokemon data
-    // console.log("Moves:", pokemonData.moves);
 
     const moves = await Promise.all(
       pokemonData.moves.map(async (moveEntry: any) => {
         const moveResponse = await fetch(moveEntry.move.url);
         const moveDetails = await moveResponse.json();
+
+        let tmNumber = "-";
+        const machine = moveDetails.machines.find(
+          (machine: any) =>
+            machine.version_group.name === "red-blue" ||
+            machine.version_group.name === "yellow"
+        );
+        if (machine) {
+          const machineResponse = await fetch(machine.machine.url);
+          const machineData = await machineResponse.json();
+          tmNumber = machineData.item.name.toUpperCase().replace("TM", "");
+        }
 
         const redBlueDetails = moveEntry.version_group_details.find(
           (versionDetails: any) =>
@@ -43,9 +61,9 @@ const fetchPokemonMove = async (name: string) => {
             versionDetails.version_group.name === "yellow"
         );
 
-        return {
-          // category:moveDetails.version_group_details[0].move_learn_category.name,
+        // const;
 
+        return {
           moveName: moveEntry.move.name,
           redBlueGeneration: redBlueDetails?.version_group.name || "-",
           redBlueMethod: redBlueDetails?.move_learn_method?.name || "-",
@@ -56,6 +74,7 @@ const fetchPokemonMove = async (name: string) => {
           power: moveDetails.power || "-",
           accuracy: moveDetails.accuracy || "-",
           type: moveDetails.type.name,
+          tmNumber: tmNumber,
         };
       })
     );
@@ -99,11 +118,11 @@ const fetchPokemonMove = async (name: string) => {
     const yellowTmMoves = yellowMoves.filter(
       (move) => move.yellowMethod === "machine"
     );
-    const yellowHmMoves = yellowMoves.filter(
-      (move) => move.yellowMethod === "hidden-machine"
-    );
-    console.log("tm yellow move", yellowTmMoves);
-    console.log("Hm yellow move", yellowHmMoves);
+    // const yellowHmMoves = yellowMoves.filter(
+    //   (move) => move.yellowMethod === "hidden-machine"
+    // );
+    // console.log("tm yellow move", yellowTmMoves);
+    // console.log("Hm yellow move", yellowHmMoves);
     return {
       redBlue: {
         levelUpMove: redBlueLevelUpMove,
@@ -123,6 +142,7 @@ const fetchPokemonMove = async (name: string) => {
     throw error;
   }
 };
+/////////
 const PokemonMoveDetails = ({ name }: { name: string }) => {
   const {
     isLoading,
@@ -132,71 +152,102 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
     queryKey: [name],
     queryFn: async () => fetchPokemonMove(name),
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 9;
+  const navigate = useNavigate();
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    if (page === 1) {
+      navigate(`/pokemon/${currentPage}/move/1`);
+    } else {
+      navigate(`/pokemon/${page}`);
+    }
+    if (page === 2) {
+      navigate(`/pokemon/${currentPage}/move/2`);
+    } else {
+      navigate(`/pokemon/${page}`);
+    }
+    if (page === 3) {
+      navigate(`/pokemon/${currentPage}/move/3`);
+    } else {
+      navigate(`/pokemon/${page}`);
+    }
+  };
+
+  const hasLevel = (moves: any[]) =>
+    moves.some(
+      (move) =>
+        (move.redBlueLevel && move.redBlueLevel !== "-") ||
+        (move.yellowLevel && move.yellowLevel !== "-")
+    );
+
+  // const hasTm = (moves: any[]) =>
+  //   moves.some(
+  //     (move) =>
+  //       (move.redBlueTmMoves && move.redBlueTmMoves !== "-") ||
+  //       (move.yellowTmMoves && move.yellowTmMoves !== "-")
+  //   );
+
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error Pokemon Move</div>;
-  console.log("redBlue", pokemonMoveData);
-  const renderMoveTable = (moves: any[]) => (
-    <Table>
-      <TableHeader className="bg-red-300">
-        <TableRow>
-          <TableHead>Lv</TableHead>
-          <TableHead>Move</TableHead>
-          <TableHead>Type</TableHead>
-          {/* <TableHead>Cat.</TableHead> */}
-          <TableHead>Power</TableHead>
-          <TableHead>Acc.</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {moves.map((move) => (
-          <TableRow key={move.moveName}>
-            <TableCell className="">
-              {" "}
-              {move.redBlueLevel || move.yellowLevel || "-"}
-            </TableCell>
-            <TableCell> {capitalize(move.moveName)} </TableCell>
-            <TableCell
-              className={`border rounded-md mt-2 p-2 items-center flex justify-center ${
-                typeColors[move.type]
-              }`}
-            >
-              {move.type.charAt(0).toUpperCase() + move.type.slice(1)}{" "}
-            </TableCell>
-            {/* <TableCell className="pl-8">
-              {moveCategory[move.category] ? (
-                <img
-                  src={moveCategory[move.category]}
-                  alt={move.category}
-                  className="h-4 w-4 mr-2"
-                />
-              ) : (
-                "-"
-              )}
-              {move.category}
-            </TableCell> */}
-            <TableCell className="pl-8"> {move.power} </TableCell>
-            <TableCell> {move.accuracy} </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
-  );
 
+  const renderMoveTable = (moves: any[]) => {
+    const showLevelColum = hasLevel(moves);
+    // const showTmColum = hasTm(moves);
+    return (
+      <Table>
+        <TableHeader className="bg-orange-200">
+          <TableRow>
+            {showLevelColum && <TableHead>Lv</TableHead>}
+            <TableHead>TM</TableHead>
+            <TableHead>Move</TableHead>
+            <TableHead>Type</TableHead>
+            <TableHead>Power</TableHead>
+            <TableHead>Acc.</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {moves.map((move) => (
+            <TableRow key={move.moveName}>
+              {showLevelColum && (
+                <TableCell className="">
+                  {move.redBlueLevel || move.yellowLevel || ""}
+                </TableCell>
+              )}
+              <TableCell>{move.tmNumber}</TableCell>
+              <TableCell className="">{capitalize(move.moveName)}</TableCell>
+              <TableCell
+                className={`border rounded-md p-2 mt-2 items-center flex justify-center ${
+                  typeColors[move.type]
+                }`}
+              >
+                {move.type.charAt(0).toUpperCase() + move.type.slice(1)}{" "}
+              </TableCell>
+              <TableCell className="">{move.power}</TableCell>
+              <TableCell> {move.accuracy} </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    );
+  };
   return (
-    <>
+    <div className="mb-8">
       <Tabs defaultValue="tab1">
-        <TabsList>
+        <TabsList className="samsungS8:ml-12 iphoneSe:ml-14 md:ml-8 lg:ml-4  ">
           <TabsTrigger value="tab1">Red/Blue</TabsTrigger>
           <TabsTrigger value="tab2">Yellow</TabsTrigger>
         </TabsList>
         <TabsContent value="tab1">
-          <div className="grid grid-cols-6 w-full gap-2">
-            <div className="col-span-3">
+          <div className="lg:grid lg:grid-cols-6 w-80 gap-2 iphoneSe:flex iphoneSe:flex-col samsungS8:w-72 samsungS8:ml-12 iphoneSe:ml-14 md:ml-0 md:w-full md:px-8 lg:ml-4  lg:px-0">
+            {/* <div className=" "> */}
+            <div className="lg:col-span-3 lg:w-11/12 ">
               <div>
                 <div className="text-lg font-bold pt-4">
                   Move learn by level up
                 </div>
-                <div>
+                <div className="py-2 lg:pt-3 lg:pb-1">
                   {capitalize(name)} learns the following moves in Pokémon Red &
                   Blue at the levels specified.
                 </div>
@@ -209,30 +260,21 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
               </div>
               <div className="">
                 <div className="text-lg font-bold pt-4">Egg moves</div>
-                {pokemonMoveData?.redBlue.eggMoves &&
-                pokemonMoveData.redBlue.eggMoves.length > 0 ? (
-                  renderMoveTable(pokemonMoveData.redBlue.eggMoves)
-                ) : (
-                  <div className="pt-2 pb-8">
-                    This Pokemon cannot learn any moves by breeding
-                  </div>
-                )}
+                <div className="py-2">
+                  {pokemonMoveData?.redBlue.eggMoves &&
+                  pokemonMoveData.redBlue.eggMoves.length > 0 ? (
+                    renderMoveTable(pokemonMoveData.redBlue.eggMoves)
+                  ) : (
+                    <div className="pt-2 pb-8">
+                      This Pokemon cannot learn any moves by breeding
+                    </div>
+                  )}
+                </div>
               </div>
-              {/* <div className="">
-                <div className="text-lg font-bold pt-4">Move learn by HM</div>
-                {pokemonMoveData?.redBlue.hmMoves &&
-                pokemonMoveData.redBlue.hmMoves.length > 0 ? (
-                  renderMoveTable(pokemonMoveData.redBlue.hmMoves)
-                ) : (
-                  <div className="pt-2 pb-8">
-                    This Pokemon cannot learn any moves by HM
-                  </div>
-                )}
-              </div> */}
             </div>
-            <div className="col-span-3">
-              <div className="text-lg font-bold pt-4">Move learn by TM</div>
-              <div>
+            <div className="lg:col-span-3 lg:w-11/12 lg:pr-10 xl:pr-4">
+              <div className="text-lg font-bold pt-4 ">Move learn by TM</div>
+              <div className="py-2 lg:mr-4">
                 {capitalize(name)} is compatible with these Technical Machines
                 in Pokémon Red & Blue:
               </div>
@@ -246,15 +288,18 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
               )}
             </div>
           </div>
+          {/* </div> */}
         </TabsContent>
+
         <TabsContent value="tab2">
-          <div className="grid grid-cols-6 w-full gap-2">
-            <div className="col-span-3">
+          {/* YELLOW */}
+          <div className="lg:grid lg:grid-cols-6 w-80 gap-2 iphoneSe:flex iphoneSe:flex-col samsungS8:w-72 samsungS8:ml-12 iphoneSe:ml-14 md:ml-0 md:w-full md:px-8 lg:ml-4 xl:  lg:px-0  ">
+            <div className="lg:col-span-3 lg:w-11/12">
               <div>
                 <div className="text-lg font-bold pt-4">
                   Move learn by level up
                 </div>
-                <p>
+                <p className="lg:pt-3 lg:pb-1">
                   {capitalize(name)} learns the following moves in Pokémon
                   Yellow at the levels specified.
                 </p>
@@ -265,32 +310,23 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
                   <div> This pokemon cannot learn move </div>
                 )}
               </div>
-              {/* <div className="">
-                <div className="text-lg font-bold pt-4">Move learn by HM</div>
-                {pokemonMoveData?.yellow.hmMoves &&
-                pokemonMoveData.yellow.hmMoves.length > 0 ? (
-                  renderMoveTable(pokemonMoveData.yellow.hmMoves)
-                ) : (
-                  <div className="pt-2 pb-8">
-                    This Pokemon cannot learn any moves by HM
-                  </div>
-                )}
-              </div> */}
               <div className="">
-                <div className="text-lg font-bold pt-4">Egg moves</div>
-                {pokemonMoveData?.yellow.eggMoves &&
-                pokemonMoveData.yellow.eggMoves.length > 0 ? (
-                  renderMoveTable(pokemonMoveData.yellow.eggMoves)
-                ) : (
-                  <div className="pt-2 pb-8">
-                    This Pokemon cannot learn any moves by breeding
-                  </div>
-                )}
+                <div className="text-lg font-bold pt-4 pb-2">Egg moves</div>
+                <div>
+                  {pokemonMoveData?.yellow.eggMoves &&
+                  pokemonMoveData.yellow.eggMoves.length > 0 ? (
+                    renderMoveTable(pokemonMoveData.yellow.eggMoves)
+                  ) : (
+                    <div className="pt-2 pb-8">
+                      This Pokemon cannot learn any moves by breeding
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-            <div className="col-span-3">
-              <div className="text-lg font-bold pt-4">Move learn by TM</div>
-              <div>
+            <div className="lg:col-span-3 lg:w-11/12 lg:pr-10 xl:pr-4 xl:bg- ">
+              <div className="text-lg font-bold pt-4 ">Move learn by TM</div>
+              <div className="py-2">
                 {capitalize(name)} is compatible with these Technical Machines
                 in Pokémon Yellow:
               </div>
@@ -306,7 +342,21 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
           </div>
         </TabsContent>
       </Tabs>
-    </>
+      <Pagination>
+        <PaginationContent>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <PaginationItem key={page}>
+              <PaginationLink
+                onClick={() => handlePageChange(page)}
+                disabled={currentPage === page}
+              >
+                {page}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+        </PaginationContent>
+      </Pagination>
+    </div>
   );
 };
 
