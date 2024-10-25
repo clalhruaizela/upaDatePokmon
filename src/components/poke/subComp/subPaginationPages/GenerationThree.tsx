@@ -1,7 +1,7 @@
-import React from "react";
+//rafce
 
-function GenerationThree() {
+const GenerationThree = () => {
   return <div>GenerationThree</div>;
-}
+};
 
 export default GenerationThree;

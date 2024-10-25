@@ -1,6 +1,5 @@
 import { PokemonList } from "@/components/poke/poke";
 import PokeCard from "@/components/poke/pokeCard";
-// import SortPokemon from "@/components/poke/sortPokemon";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/ui/Layout/layout";
 import {
@@ -10,14 +9,6 @@ import {
   PaginationItem,
   PaginationLink,
 } from "@/components/ui/pagination";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectGroup,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -184,7 +175,6 @@ const PokedexHome = () => {
                 </div>
               </div>
             </div>
-            <div>{/* <SortPokemon pokemonData={pokemonData} /> */}</div>
             <div
               className="flex flex-col md:grid md:grid-cols-3  min-h-screen md:gap-4  md:w-9/12  xl:w-8/12   bg-white md:py-6 "
               // start={startIndex + 1}
@@ -225,7 +215,6 @@ const PokedexHome = () => {
             </div>
             <div className="flex w-full  md:w-9/12 xxl:w-8/12 bg-white  md:pb-4">
               {totalPages > 1 && (
-                // {totalPages > 1 && (
                 <Pagination className="py-5 w-24 border-t-2 md:py-10 ">
                   <PaginationContent>
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(
@@ -234,8 +223,6 @@ const PokedexHome = () => {
                           item === 1 ||
                           item === totalPages ||
                           Math.abs(page - item) <= 2 // Checks if the page number (item) is close enough to the current page (within 2 pages),
-                          // ||
-                          // (item % 3 === 0 && Math.abs(item - page) <= 2)
                         ) {
                           return (
                             <PaginationItem key={item}>
@@ -251,18 +238,13 @@ const PokedexHome = () => {
                               </PaginationLink>
                             </PaginationItem>
                           );
-                        } else if (
-                          item === page - 3 ||
-                          item === page + 3
-                          // (item % 3 === 0 && Math.abs(item - page) <= 2)
-                        ) {
+                        } else if (item === page - 3 || item === page + 3) {
                           return (
                             <PaginationEllipsis
                               key={item}
                               className="text-black"
                             />
                           );
-                          // return <span key={item}></span>;
                         }
                         return null;
                       }

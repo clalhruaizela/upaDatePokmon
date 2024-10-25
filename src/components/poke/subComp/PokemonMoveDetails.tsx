@@ -15,9 +15,7 @@ import {
   PaginationItem,
   PaginationLink,
 } from "@/components/ui/pagination";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import GenerationTwo from "./subPaginationPages/GenerationTwo";
+import { useNavigate, useParams } from "react-router-dom";
 
 const capitalize = (str: string): string => {
   const updatedstr = str.replace(/-/g, " ");
@@ -152,27 +150,18 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
     queryKey: [name],
     queryFn: async () => fetchPokemonMove(name),
   });
-  const [currentPage, setCurrentPage] = useState(1);
+  const { id } = useParams<{ id: string }>();
   const totalPages = 9;
   const navigate = useNavigate();
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    if (page === 1) {
-      navigate(`/pokemon/${currentPage}/move/1`);
-    } else {
-      navigate(`/pokemon/${page}`);
-    }
-    if (page === 2) {
-      navigate(`/pokemon/${currentPage}/move/2`);
-    } else {
-      navigate(`/pokemon/${page}`);
-    }
-    if (page === 3) {
-      navigate(`/pokemon/${currentPage}/move/3`);
-    } else {
-      navigate(`/pokemon/${page}`);
-    }
+    // console.log("Navigating to page:", page);
+    // console.log("Current ID:", id);
+    // console.log("Current Pokemon Name:", name);
+    navigate({
+      pathname: `/pokemon/${id}/move/page=${page}/name=${name}`,
+      // search: `?name=${name}`,
+    });
   };
 
   const hasLevel = (moves: any[]) =>
@@ -290,7 +279,6 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
           </div>
           {/* </div> */}
         </TabsContent>
-
         <TabsContent value="tab2">
           {/* YELLOW */}
           <div className="lg:grid lg:grid-cols-6 w-80 gap-2 iphoneSe:flex iphoneSe:flex-col samsungS8:w-72 samsungS8:ml-12 iphoneSe:ml-14 md:ml-0 md:w-full md:px-8 lg:ml-4 xl:  lg:px-0  ">
@@ -346,10 +334,7 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
         <PaginationContent>
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
             <PaginationItem key={page}>
-              <PaginationLink
-                onClick={() => handlePageChange(page)}
-                disabled={currentPage === page}
-              >
+              <PaginationLink onClick={() => handlePageChange(page)}>
                 {page}
               </PaginationLink>
             </PaginationItem>
