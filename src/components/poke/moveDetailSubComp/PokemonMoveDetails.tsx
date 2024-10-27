@@ -158,6 +158,7 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
     // console.log("Navigating to page:", page);
     // console.log("Current ID:", id);
     // console.log("Current Pokemon Name:", name);
+
     navigate({
       pathname: `/pokemon/${id}/move/page=${page}/name=${name}`,
       // search: `?name=${name}`,

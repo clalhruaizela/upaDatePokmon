@@ -1,6 +1,6 @@
 import { EvolutionChainLink } from "./poke";
-import EvoImageCard from "./subComp/evoImage";
-import usePokemonEvolution from "./subComp/usePokemonEvolution";
+import EvoImageCard from "./moveDetailSubComp/evoImage";
+import usePokemonEvolution from "./moveDetailSubComp/usePokemonEvolution";
 
 // Error display component
 const ErrorState = ({

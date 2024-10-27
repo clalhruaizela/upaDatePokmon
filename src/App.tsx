@@ -2,9 +2,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Routes } from "react-router-dom";
 import PokemonPageID from "./components/poke/pages/pkmPageID";
 import PokedexHome from "./pages/Pokedex";
-import GenerationTwo from "./components/poke/subComp/subPaginationPages/GenerationTwo";
-import GenerationThree from "./components/poke/subComp/subPaginationPages/GenerationThree";
-import GenerationOne from "./components/poke/subComp/subPaginationPages/GenerationOne";
+import GenerationTwo from "./components/poke/moveDetailSubComp/subPaginationPages/GenerationTwo";
+import GenerationThree from "./components/poke/moveDetailSubComp/subPaginationPages/GenerationThree";
+import GenerationOne from "./components/poke/moveDetailSubComp/subPaginationPages/GenerationOne";
 
 const queryClient = new QueryClient();
 function App() {

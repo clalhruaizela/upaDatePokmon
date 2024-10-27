@@ -15,12 +15,12 @@ import { IoIosArrowDropleftCircle } from "react-icons/io";
 import { IoIosArrowDroprightCircle } from "react-icons/io";
 // import { Skeleton } from "@/components/ui/skeleton";
 import PkmMdSpecies from "../PkmMdSpecies";
-import PokemonVariety from "../subComp/pokemonVariety";
+import PokemonVariety from "../moveDetailSubComp/pokemonVariety";
 import { useEffect, useState } from "react";
 import { PokemonTypesData, Weakness } from "../pokeType";
-import PokemonShiny from "../subComp/PokemonShiny";
-import PokemonLocation from "../subComp/location";
-import PokemonMoveDetails from "../subComp/PokemonMoveDetails";
+import PokemonShiny from "../moveDetailSubComp/PokemonShiny";
+import PokemonLocation from "../moveDetailSubComp/location";
+import PokemonMoveDetails from "../moveDetailSubComp/PokemonMoveDetails";
 
 const fetchPokemonDetails = async (id: number) => {
   const url = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
