@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+import { capitalize, fetchPokemonMove } from "./Utilities";
 import {
   Table,
   TableBody,
@@ -6,56 +8,53 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Tabs } from "@radix-ui/react-tabs";
+import { TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
   PaginationLink,
 } from "@/components/ui/pagination";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useQuery } from "@tanstack/react-query";
 import { typeColors } from "../../utilities/typeColor";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { fetchPokemonGenTwoMove } from "./Utilities";
 
-// const capitalize = (str: string): string => {
-//   const updatedstr = str.replace(/-/g, " ");
-//   return updatedstr
-//     .split(" ")
-//     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-//     .join(" ");
-// };
-
-const GenerationOne: React.FC<{ name: string }> = () => {
-  const { id } = useParams<{ id: string }>();
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-  const pokemonName = searchParams.get("name") || " ";
+const GenerationOne = () => {
+  const { id, name } = useParams<{ id: string; name: string }>();
   const {
     isLoading,
     isError,
-    data: pokemonGenOneMove,
+    data: pokemonMoveData,
   } = useQuery({
-    queryKey: [pokemonName, id],
-    queryFn: () => fetchPokemonGenTwoMove(pokemonName, ["red-blue", "yellow"]),
-    enabled: !!pokemonName && !!id,
+    queryKey: [name],
+    queryFn: async () => fetchPokemonMove(name),
   });
   const totalPages = 9;
+  const navigate = useNavigate();
 
   const handlePageChange = (page: number) => {
-    // alert(page);
+    // console.log("Current Pokemon Name:", name);
     navigate({
-      pathname: `/pokemon/${id}/move/${page}`,
-      search: `?name=${pokemonName}`,
+      pathname: `/pokemon/${id}/gen${page}`,
+      search: `?name=${name}`,
     });
   };
-
+  console.log("RedBlue", pokemonMoveData?.generation1.redBlue);
+  console.log("Yellow", pokemonMoveData?.generation1.yellow);
   const hasLevel = (moves: any[]) =>
     moves.some(
       (move) =>
         (move.redBlueLevel && move.redBlueLevel !== "-") ||
         (move.yellowLevel && move.yellowLevel !== "-")
     );
+
+  // const hasTm = (moves: any[]) =>
+  //   moves.some(
+  //     (move) =>
+  //       (move.redBlueTmMoves && move.redBlueTmMoves !== "-") ||
+  //       (move.yellowTmMoves && move.yellowTmMoves !== "-")
+  //   );
+
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error Pokemon Move</div>;
 
@@ -83,7 +82,7 @@ const GenerationOne: React.FC<{ name: string }> = () => {
                 </TableCell>
               )}
               <TableCell>{move.tmNumber}</TableCell>
-              <TableCell className="">{move.moveName}</TableCell>
+              <TableCell className="">{capitalize(move.moveName)}</TableCell>
               <TableCell
                 className={`border rounded-md p-2 mt-2 items-center flex justify-center ${
                   typeColors[move.type]
@@ -115,23 +114,22 @@ const GenerationOne: React.FC<{ name: string }> = () => {
                   Move learn by level up
                 </div>
                 <div className="py-2 lg:pt-3 lg:pb-1">
-                  {pokemonName} learns the following moves in Pokémon Red & Blue
-                  at the levels specified.
+                  {capitalize(name)} learns the following moves in Pokémon
+                  Scarlet & Violet at the levels specified.
                 </div>
-                {pokemonGenOneMove?.redBlue?.levelUpMove?.length ? (
-                  renderMoveTable(pokemonGenOneMove.redBlue.levelUpMove)
+                {pokemonMoveData?.generation1.redBlue?.levelUp &&
+                pokemonMoveData.generation1.redBlue.levelUp.length > 0 ? (
+                  renderMoveTable(pokemonMoveData.generation1.redBlue.levelUp)
                 ) : (
-                  <div>
-                    This Pokémon cannot learn moves at any level in Red & Blue
-                  </div>
+                  <div> This pokemon cannot learn move </div>
                 )}
               </div>
               <div className="">
                 <div className="text-lg font-bold pt-4">Egg moves</div>
                 <div className="py-2">
-                  {pokemonGenOneMove?.redBlue.eggMoves &&
-                  pokemonGenOneMove.redBlue.eggMoves.length > 0 ? (
-                    renderMoveTable(pokemonGenOneMove.redBlue.eggMoves)
+                  {pokemonMoveData?.generation1.redBlue.egg &&
+                  pokemonMoveData.generation1.redBlue.egg.length > 0 ? (
+                    renderMoveTable(pokemonMoveData.generation1.redBlue.egg)
                   ) : (
                     <div className="pt-2 pb-8">
                       This Pokemon cannot learn any moves by breeding
@@ -143,12 +141,12 @@ const GenerationOne: React.FC<{ name: string }> = () => {
             <div className="lg:col-span-3 lg:w-11/12 lg:pr-10 xl:pr-4">
               <div className="text-lg font-bold pt-4 ">Move learn by TM</div>
               <div className="py-2 lg:mr-4">
-                {pokemonName} is compatible with these Technical Machines in
-                Pokémon Red & Blue:
+                {capitalize(name)} is compatible with these Technical Machines
+                in Pokémon Scarlet & Violet:
               </div>
-              {pokemonGenOneMove?.redBlue.tmMoves &&
-              pokemonGenOneMove.redBlue.tmMoves.length > 0 ? (
-                renderMoveTable(pokemonGenOneMove.redBlue.tmMoves)
+              {pokemonMoveData?.generation1.redBlue.tm &&
+              pokemonMoveData.generation1.redBlue.tm.length > 0 ? (
+                renderMoveTable(pokemonMoveData.generation1.redBlue.tm)
               ) : (
                 <div className="pt-2 pb-8">
                   This Pokemon cannot be taught any TM moves
@@ -167,12 +165,12 @@ const GenerationOne: React.FC<{ name: string }> = () => {
                   Move learn by level up
                 </div>
                 <p className="lg:pt-3 lg:pb-1">
-                  {pokemonName} learns the following moves in Pokémon Yellow at
-                  the levels specified.
+                  {capitalize(name)} learns the following moves in Pokémon
+                  Yellow at the levels specified.
                 </p>
-                {pokemonGenOneMove?.yellow?.levelUpMove &&
-                pokemonGenOneMove.yellow.levelUpMove.length > 0 ? (
-                  renderMoveTable(pokemonGenOneMove.yellow.levelUpMove)
+                {pokemonMoveData?.generation1.yellow?.levelUp &&
+                pokemonMoveData.generation1.yellow.levelUp.length > 0 ? (
+                  renderMoveTable(pokemonMoveData.generation1.yellow.levelUp)
                 ) : (
                   <div> This pokemon cannot learn move </div>
                 )}
@@ -180,9 +178,9 @@ const GenerationOne: React.FC<{ name: string }> = () => {
               <div className="">
                 <div className="text-lg font-bold pt-4 pb-2">Egg moves</div>
                 <div>
-                  {pokemonGenOneMove?.yellow.eggMoves &&
-                  pokemonGenOneMove.yellow.eggMoves.length > 0 ? (
-                    renderMoveTable(pokemonGenOneMove.yellow.eggMoves)
+                  {pokemonMoveData?.generation1.yellow.egg &&
+                  pokemonMoveData.generation1.yellow.egg.length > 0 ? (
+                    renderMoveTable(pokemonMoveData.generation1.yellow.egg)
                   ) : (
                     <div className="pt-2 pb-8">
                       This Pokemon cannot learn any moves by breeding
@@ -194,12 +192,12 @@ const GenerationOne: React.FC<{ name: string }> = () => {
             <div className="lg:col-span-3 lg:w-11/12 lg:pr-10 xl:pr-4 xl:bg- ">
               <div className="text-lg font-bold pt-4 ">Move learn by TM</div>
               <div className="py-2">
-                {pokemonName} is compatible with these Technical Machines in
-                Pokémon Yellow:
+                {capitalize(name)} is compatible with these Technical Machines
+                in Pokémon Yellow:
               </div>
-              {pokemonGenOneMove?.yellow.tmMoves &&
-              pokemonGenOneMove.yellow.tmMoves.length > 0 ? (
-                renderMoveTable(pokemonGenOneMove.yellow.tmMoves)
+              {pokemonMoveData?.generation1.yellow.tm &&
+              pokemonMoveData.generation1.yellow.tm.length > 0 ? (
+                renderMoveTable(pokemonMoveData.generation1.yellow.tm)
               ) : (
                 <div className="pt-2 pb-8">
                   This Pokemon cannot be taught any TM moves

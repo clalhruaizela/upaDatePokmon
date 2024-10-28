@@ -17,18 +17,9 @@ function App() {
         <Routes>
           <Route path="/pokemon" element={<PokedexHome />} />
           <Route path="/pokemon/:id" element={<PokemonPageID />} />
-          <Route
-            path="/pokemon/:id/move/:page/:name"
-            element={<GenerationOne />}
-          />
-          <Route
-            path="/pokemon/:id/move/:page/:name"
-            element={<GenerationTwo />}
-          />
-          <Route
-            path="/pokemon/:id/move/:page/:name"
-            element={<GenerationThree />}
-          />
+          <Route path="/pokemon/:id/gen1" element={<GenerationOne />} />
+          <Route path="/pokemon/:id/gen2" element={<GenerationTwo />} />
+          <Route path="/pokemon/:id/gen3" element={<GenerationThree />} />
         </Routes>
       </QueryClientProvider>
     </div>

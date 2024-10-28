@@ -41,7 +41,7 @@ const fetchPokemonMove = async (name: string) => {
         let tmNumber = "-";
         const machine = moveDetails.machines.find(
           (machine: any) =>
-            machine.version_group.name === "red-blue" ||
+            machine.version_group.name === "scarlet-violet" ||
             machine.version_group.name === "yellow"
         );
         if (machine) {
@@ -50,22 +50,23 @@ const fetchPokemonMove = async (name: string) => {
           tmNumber = machineData.item.name.toUpperCase().replace("TM", "");
         }
 
-        const redBlueDetails = moveEntry.version_group_details.find(
+        const scarletVioletDetails = moveEntry.version_group_details.find(
           (versionDetails: any) =>
-            versionDetails.version_group.name === "red-blue"
+            versionDetails.version_group.name === "scarlet-violet"
         );
         const yellowDetails = moveEntry.version_group_details.find(
           (versionDetails: any) =>
             versionDetails.version_group.name === "yellow"
         );
-
         // const;
 
         return {
           moveName: moveEntry.move.name,
-          redBlueGeneration: redBlueDetails?.version_group.name || "-",
-          redBlueMethod: redBlueDetails?.move_learn_method?.name || "-",
-          redBlueLevel: redBlueDetails?.level_learned_at || "-",
+          scarletVioletGeneration:
+            scarletVioletDetails?.version_group.name || "-",
+          scarletVioletMethod:
+            scarletVioletDetails?.move_learn_method?.name || "-",
+          scarletVioletLevel: scarletVioletDetails?.level_learned_at || "-",
           yellowGeneration: yellowDetails?.version_group.name || "-",
           yellowMethod: yellowDetails?.move_learn_method?.name || "-",
           yellowLevel: yellowDetails?.level_learned_at || "-",
@@ -77,27 +78,26 @@ const fetchPokemonMove = async (name: string) => {
       })
     );
 
-    const redBlueMoves = moves.filter(
-      (move) => move.redBlueGeneration === "red-blue"
+    const scarletVioletMoves = moves.filter(
+      (move) => move.scarletVioletGeneration === "scarlet-violet"
     );
     const yellowMoves = moves.filter(
       (move) => move.yellowGeneration === "yellow"
     );
-
-    const redBlueLevelUpMove = redBlueMoves
-      .filter((move) => move.redBlueMethod === "level-up")
+    const scarletVioletLevelUpMove = scarletVioletMoves
+      .filter((move) => move.scarletVioletMethod === "level-up")
       .sort((a, b) => {
-        if (a.redBlueLevel === "-") return 1;
-        if (b.redBlueLevel === "-") return -1;
-        return a.redBlueLevel - b.redBlueLevel;
+        if (a.scarletVioletLevel === "-") return 1;
+        if (b.scarletVioletLevel === "-") return -1;
+        return a.scarletVioletLevel - b.scarletVioletLevel;
       });
     // console.log("Red Blue Level Up Moves:", redBlueLevelUpMove);
-    const redBlueEggMoves = redBlueMoves.filter(
-      (move) => move.redBlueMethod === "egg"
+    const scarletVioletEggMoves = scarletVioletMoves.filter(
+      (move) => move.scarletVioletMethod === "egg"
     );
     // console.log("Red Blue Egg Moves:", redBlueEggMoves);
-    const redBlueTmMoves = redBlueMoves.filter(
-      (move) => move.redBlueMethod === "machine"
+    const scarletVioletTmMoves = scarletVioletMoves.filter(
+      (move) => move.scarletVioletMethod === "machine"
     );
     // const redBlueHmMoves = redBlueMoves.filter(
     //   (move) => move.redBlueMethod === "hidden-machine"
@@ -122,10 +122,10 @@ const fetchPokemonMove = async (name: string) => {
     // console.log("tm yellow move", yellowTmMoves);
     // console.log("Hm yellow move", yellowHmMoves);
     return {
-      redBlue: {
-        levelUpMove: redBlueLevelUpMove,
-        eggMoves: redBlueEggMoves,
-        tmMoves: redBlueTmMoves,
+      scarletViolet: {
+        levelUpMove: scarletVioletLevelUpMove,
+        eggMoves: scarletVioletEggMoves,
+        tmMoves: scarletVioletTmMoves,
         // hmMoves: redBlueHmMoves,
       },
       yellow: {
@@ -155,13 +155,10 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
   const navigate = useNavigate();
 
   const handlePageChange = (page: number) => {
-    // console.log("Navigating to page:", page);
-    // console.log("Current ID:", id);
     // console.log("Current Pokemon Name:", name);
-
     navigate({
-      pathname: `/pokemon/${id}/move/page=${page}/name=${name}`,
-      // search: `?name=${name}`,
+      pathname: `/pokemon/${id}/gen${page}`,
+      search: `?name=${name}`,
     });
   };
 
@@ -241,9 +238,9 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
                   {capitalize(name)} learns the following moves in Pokémon Red &
                   Blue at the levels specified.
                 </div>
-                {pokemonMoveData?.redBlue?.levelUpMove &&
-                pokemonMoveData.redBlue.levelUpMove.length > 0 ? (
-                  renderMoveTable(pokemonMoveData.redBlue.levelUpMove)
+                {pokemonMoveData?.scarletViolet?.levelUpMove &&
+                pokemonMoveData.scarletViolet.levelUpMove.length > 0 ? (
+                  renderMoveTable(pokemonMoveData.scarletViolet.levelUpMove)
                 ) : (
                   <div> This pokemon cannot learn move </div>
                 )}
@@ -251,9 +248,9 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
               <div className="">
                 <div className="text-lg font-bold pt-4">Egg moves</div>
                 <div className="py-2">
-                  {pokemonMoveData?.redBlue.eggMoves &&
-                  pokemonMoveData.redBlue.eggMoves.length > 0 ? (
-                    renderMoveTable(pokemonMoveData.redBlue.eggMoves)
+                  {pokemonMoveData?.scarletViolet.eggMoves &&
+                  pokemonMoveData.scarletViolet.eggMoves.length > 0 ? (
+                    renderMoveTable(pokemonMoveData.scarletViolet.eggMoves)
                   ) : (
                     <div className="pt-2 pb-8">
                       This Pokemon cannot learn any moves by breeding
@@ -268,9 +265,9 @@ const PokemonMoveDetails = ({ name }: { name: string }) => {
                 {capitalize(name)} is compatible with these Technical Machines
                 in Pokémon Red & Blue:
               </div>
-              {pokemonMoveData?.redBlue.tmMoves &&
-              pokemonMoveData.redBlue.tmMoves.length > 0 ? (
-                renderMoveTable(pokemonMoveData.redBlue.tmMoves)
+              {pokemonMoveData?.scarletViolet.tmMoves &&
+              pokemonMoveData.scarletViolet.tmMoves.length > 0 ? (
+                renderMoveTable(pokemonMoveData.scarletViolet.tmMoves)
               ) : (
                 <div className="pt-2 pb-8">
                   This Pokemon cannot be taught any TM moves
