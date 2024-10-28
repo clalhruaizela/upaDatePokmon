@@ -629,30 +629,33 @@ export const fetchPokemonMove = async (name: string) => {
 
     // Organize moves by generation and type (level-up, egg, TM)
     return {
-      generation1: {
-        redBlue: {
-          levelUp: filterAndSortMoves(moves, "redBlue", "level-up"),
-          egg: moves.filter((move) => move.redBlue.method === "egg"),
-          tm: moves.filter((move) => move.redBlue.method === "machine"),
-        },
-        yellow: {
-          levelUp: filterAndSortMoves(moves, "yellow", "level-up"),
-          egg: moves.filter((move) => move.yellow.method === "egg"),
-          tm: moves.filter((move) => move.yellow.method === "machine"),
-        },
+      redBlue: {
+        levelUp: filterAndSortMoves(moves, "redBlue", "level-up"),
+        egg: moves.filter((move) => move.redBlue.method === "egg"),
+        tm: moves.filter((move) => move.redBlue.method === "machine"),
       },
-      generation2: {
-        goldSilver: {
-          levelUp: filterAndSortMoves(moves, "goldSilver", "level-up"),
-          egg: moves.filter((move) => move.goldSilver.method === "egg"),
-          tm: moves.filter((move) => move.goldSilver.method === "machine"),
-        },
-        crystal: {
-          levelUp: filterAndSortMoves(moves, "crystal", "level-up"),
-          egg: moves.filter((move) => move.crystal.method === "egg"),
-          tm: moves.filter((move) => move.crystal.method === "machine"),
-        },
+      yellow: {
+        levelUp: filterAndSortMoves(moves, "yellow", "level-up"),
+        egg: moves.filter((move) => move.yellow.method === "egg"),
+        tm: moves.filter((move) => move.yellow.method === "machine"),
       },
+
+      goldSilver: {
+        levelUp: filterAndSortMoves(moves, "goldSilver", "level-up"),
+        egg: moves.filter((move) => move.goldSilver.method === "egg"),
+        tm: moves.filter((move) => move.goldSilver.method === "machine"),
+      },
+      crystal: {
+        levelUp: filterAndSortMoves(moves, "crystal", "level-up"),
+        egg: moves.filter((move) => move.crystal.method === "egg"),
+        tm: moves.filter((move) => move.crystal.method === "machine"),
+      },
+      scarletViolet: {
+        levelUp: filterAndSortMoves(moves, "scarletViolet", "level-up"),
+        egg: moves.filter((move) => move.scarletViolet.method === "egg"),
+        tm: moves.filter((move) => move.scarletViolet.method === "machine"),
+      },
+
       // Continue this for each generation as needed...
     };
   } catch (error) {

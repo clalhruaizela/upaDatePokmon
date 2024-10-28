@@ -26,8 +26,8 @@ const GenerationOne = () => {
     isError,
     data: pokemonMoveData,
   } = useQuery({
-    queryKey: [name],
-    queryFn: async () => fetchPokemonMove(name),
+    queryKey: [name!],
+    queryFn: async () => fetchPokemonMove(name!),
   });
   const totalPages = 9;
   const navigate = useNavigate();
@@ -39,8 +39,8 @@ const GenerationOne = () => {
       search: `?name=${name}`,
     });
   };
-  console.log("RedBlue", pokemonMoveData?.generation1.redBlue);
-  console.log("Yellow", pokemonMoveData?.generation1.yellow);
+  console.log("RedBlue", pokemonMoveData?.redBlue);
+  console.log("Yellow", pokemonMoveData?.yellow);
   const hasLevel = (moves: any[]) =>
     moves.some(
       (move) =>
@@ -117,9 +117,9 @@ const GenerationOne = () => {
                   {capitalize(name)} learns the following moves in Pokémon
                   Scarlet & Violet at the levels specified.
                 </div>
-                {pokemonMoveData?.generation1.redBlue?.levelUp &&
-                pokemonMoveData.generation1.redBlue.levelUp.length > 0 ? (
-                  renderMoveTable(pokemonMoveData.generation1.redBlue.levelUp)
+                {pokemonMoveData?.redBlue?.levelUp &&
+                pokemonMoveData.redBlue.levelUp.length > 0 ? (
+                  renderMoveTable(pokemonMoveData.redBlue.levelUp)
                 ) : (
                   <div> This pokemon cannot learn move </div>
                 )}
@@ -127,9 +127,9 @@ const GenerationOne = () => {
               <div className="">
                 <div className="text-lg font-bold pt-4">Egg moves</div>
                 <div className="py-2">
-                  {pokemonMoveData?.generation1.redBlue.egg &&
-                  pokemonMoveData.generation1.redBlue.egg.length > 0 ? (
-                    renderMoveTable(pokemonMoveData.generation1.redBlue.egg)
+                  {pokemonMoveData?.redBlue.egg &&
+                  pokemonMoveData.redBlue.egg.length > 0 ? (
+                    renderMoveTable(pokemonMoveData.redBlue.egg)
                   ) : (
                     <div className="pt-2 pb-8">
                       This Pokemon cannot learn any moves by breeding
@@ -144,9 +144,9 @@ const GenerationOne = () => {
                 {capitalize(name)} is compatible with these Technical Machines
                 in Pokémon Scarlet & Violet:
               </div>
-              {pokemonMoveData?.generation1.redBlue.tm &&
-              pokemonMoveData.generation1.redBlue.tm.length > 0 ? (
-                renderMoveTable(pokemonMoveData.generation1.redBlue.tm)
+              {pokemonMoveData?.redBlue.tm &&
+              pokemonMoveData.redBlue.tm.length > 0 ? (
+                renderMoveTable(pokemonMoveData.redBlue.tm)
               ) : (
                 <div className="pt-2 pb-8">
                   This Pokemon cannot be taught any TM moves
@@ -168,9 +168,9 @@ const GenerationOne = () => {
                   {capitalize(name)} learns the following moves in Pokémon
                   Yellow at the levels specified.
                 </p>
-                {pokemonMoveData?.generation1.yellow?.levelUp &&
-                pokemonMoveData.generation1.yellow.levelUp.length > 0 ? (
-                  renderMoveTable(pokemonMoveData.generation1.yellow.levelUp)
+                {pokemonMoveData?.yellow?.levelUp &&
+                pokemonMoveData.yellow.levelUp.length > 0 ? (
+                  renderMoveTable(pokemonMoveData.yellow.levelUp)
                 ) : (
                   <div> This pokemon cannot learn move </div>
                 )}
@@ -178,9 +178,9 @@ const GenerationOne = () => {
               <div className="">
                 <div className="text-lg font-bold pt-4 pb-2">Egg moves</div>
                 <div>
-                  {pokemonMoveData?.generation1.yellow.egg &&
-                  pokemonMoveData.generation1.yellow.egg.length > 0 ? (
-                    renderMoveTable(pokemonMoveData.generation1.yellow.egg)
+                  {pokemonMoveData?.yellow.egg &&
+                  pokemonMoveData.yellow.egg.length > 0 ? (
+                    renderMoveTable(pokemonMoveData.yellow.egg)
                   ) : (
                     <div className="pt-2 pb-8">
                       This Pokemon cannot learn any moves by breeding
@@ -195,9 +195,9 @@ const GenerationOne = () => {
                 {capitalize(name)} is compatible with these Technical Machines
                 in Pokémon Yellow:
               </div>
-              {pokemonMoveData?.generation1.yellow.tm &&
-              pokemonMoveData.generation1.yellow.tm.length > 0 ? (
-                renderMoveTable(pokemonMoveData.generation1.yellow.tm)
+              {pokemonMoveData?.yellow.tm &&
+              pokemonMoveData.yellow.tm.length > 0 ? (
+                renderMoveTable(pokemonMoveData.yellow.tm)
               ) : (
                 <div className="pt-2 pb-8">
                   This Pokemon cannot be taught any TM moves
