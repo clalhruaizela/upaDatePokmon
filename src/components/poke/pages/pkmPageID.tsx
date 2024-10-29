@@ -334,11 +334,11 @@ const PokemonPageID = () => {
                   </div> */}
                   <div className="mt-3 md:ml-6 xl:ml-0 font-semibold">
                     <div className="flex flex-row gap-1 ">
-                      {capitalize(data?.name)}
+                      {capitalize(data!.name)}
                       <p>sprites</p>
                     </div>
                     <div className="">
-                      <PokemonShiny pokemonId={data?.id} />
+                      <PokemonShiny pokemonId={data?.id.toString()} />
                     </div>
                   </div>
                 </div>

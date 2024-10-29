@@ -11,7 +11,7 @@ function App() {
   return (
     <div className="bg-[url('src/assets/abstract-blue.jpg')] w-full min-h-full">
       <div className="flex pb-1 justify-center bg-slate-300 font-bold sm:py-5 border-gray-400 border-b-2">
-        <img src="../src/assets/pokedex-logo.png" className="h-20 w-48" />
+        <img src="/src/assets/pokedex-logo.png" className="h-20 w-48" />
       </div>
       <QueryClientProvider client={queryClient}>
         <Routes>

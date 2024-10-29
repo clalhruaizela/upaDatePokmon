@@ -650,6 +650,61 @@ export const fetchPokemonMove = async (name: string) => {
         egg: moves.filter((move) => move.crystal.method === "egg"),
         tm: moves.filter((move) => move.crystal.method === "machine"),
       },
+      rubySapphire: {
+        levelUp: filterAndSortMoves(moves, "rubySapphire", "level-up"),
+        egg: moves.filter((move) => move.crystal.method === "egg"),
+        tm: moves.filter((move) => move.crystal.method === "machine"),
+      },
+      fireRedLeafGreen: {
+        levelUp: filterAndSortMoves(moves, "fireRedLeafGreen", "level-up"),
+        egg: moves.filter((move) => move.crystal.method === "egg"),
+        tm: moves.filter((move) => move.crystal.method === "machine"),
+      },
+      emerald: {
+        levelUp: filterAndSortMoves(moves, "emerald", "level-up"),
+        egg: moves.filter((move) => move.crystal.method === "egg"),
+        tm: moves.filter((move) => move.crystal.method === "machine"),
+      },
+      diamondPearl: {
+        levelUp: filterAndSortMoves(moves, "diamondPearl", "level-up"),
+        egg: moves.filter((move) => move.crystal.method === "egg"),
+        tm: moves.filter((move) => move.crystal.method === "machine"),
+      },
+      platinum: {
+        levelUp: filterAndSortMoves(moves, "platinum", "level-up"),
+        egg: moves.filter((move) => move.crystal.method === "egg"),
+        tm: moves.filter((move) => move.crystal.method === "machine"),
+      },
+      heartGoldSoulSilver: {
+        levelUp: filterAndSortMoves(moves, "heartGoldSoulSilver", "level-up"),
+        egg: moves.filter((move) => move.crystal.method === "egg"),
+        tm: moves.filter((move) => move.crystal.method === "machine"),
+      },
+      blackWhite: {
+        levelUp: filterAndSortMoves(moves, "blackWhite", "level-up"),
+        egg: moves.filter((move) => move.crystal.method === "egg"),
+        tm: moves.filter((move) => move.crystal.method === "machine"),
+      },
+      black2White2: {
+        levelUp: filterAndSortMoves(moves, "black2White2", "level-up"),
+        egg: moves.filter((move) => move.crystal.method === "egg"),
+        tm: moves.filter((move) => move.crystal.method === "machine"),
+      },
+      xy: {
+        levelUp: filterAndSortMoves(moves, "xy", "level-up"),
+        egg: moves.filter((move) => move.crystal.method === "egg"),
+        tm: moves.filter((move) => move.crystal.method === "machine"),
+      },
+      omegaRubyAlphaSapphire: {
+        levelUp: filterAndSortMoves(
+          moves,
+          "omegaRubyAlphaSapphire",
+          "level-up"
+        ),
+        egg: moves.filter((move) => move.crystal.method === "egg"),
+        tm: moves.filter((move) => move.crystal.method === "machine"),
+      },
+
       scarletViolet: {
         levelUp: filterAndSortMoves(moves, "scarletViolet", "level-up"),
         egg: moves.filter((move) => move.scarletViolet.method === "egg"),
@@ -663,3 +718,9 @@ export const fetchPokemonMove = async (name: string) => {
     throw error;
   }
 };
+export async function fetchPokemonDetails(name: string) {
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+  if (!response.ok) throw new Error("Failed to fetch Pokémon details");
+  const data = await response.json();
+  return data;
+}

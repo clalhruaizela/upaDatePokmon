@@ -1,3 +1,5 @@
+import { Surface } from "recharts";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
@@ -7,7 +9,10 @@ export default {
       samsungS8: "360px",
       iphoneSe: "375px",
       iphone12Pro: "390px",
+      pixel7: "412px",
       xs: "414px",
+      iphone14: "430px",
+      surfaceDuo: "540px",
       sm: "640px",
       md: "768px",
       lg: "1024px",

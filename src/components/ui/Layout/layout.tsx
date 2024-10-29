@@ -65,19 +65,19 @@ const Layout = ({ children }) => {
                 <div className="col-span-6 xl:col-span-3 pt-4  lg:border-l-4 lg:border-r-4 lg:border-gray-900 ">
                   <div className="flex flex-row items-center md:border-gray-900 md:justify-start md:border-t-4 lg:border-t-0 lg:border-b-0 md:border-b-4 md:ml-8 md:py-6 md:my-4 md:w-9/12 lg:pl-8 gap-4 justify-center lg:justify-center">
                     <img
-                      src="../src/assets/Instagram.png"
+                      src="/src/assets/Instagram.png"
                       className="h-6  lg:h-12"
                     />
                     <img
-                      src="../src/assets/f-logo-hd-png-17.png"
+                      src="/src/assets/f-logo-hd-png-17.png"
                       className="h-6 lg:h-16"
                     />
                     <img
-                      src="../src/assets/twitter-logo-transparent-15.png"
+                      src="/src/assets/twitter-logo-transparent-15.png"
                       className="h-6 lg:h-12"
                     />
                     <img
-                      src="../src/assets/youtube-logo-youtube-logo-transparent-youtube-icon-transparent-free-free-png.webp"
+                      src="/src/assets/youtube-logo-youtube-logo-transparent-youtube-icon-transparent-free-free-png.webp"
                       className="h-7 lg:h-14"
                     />
                   </div>
